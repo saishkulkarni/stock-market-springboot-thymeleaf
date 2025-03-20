@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div th:if="${session.user==null && session.admin==null}">
+      <button>Register</button>
+      <a href="/login"><button>Login</button></a>
+    </div>
+    <div th:if="${session.user}">
+      <button>View Stocks</button>
+      <button>Wallet</button>
+      <button>Portfolio</button>
+     <a href="/logout"><button>Logout</button></a>
+    </div>
+    <div th:if="${session.admin}">
+      <button>Add Stock</button>
+      <button>Manage Stock</button>
+      <button>View Overview</button>
+      <a href="/logout"><button>Logout</button></a>
+    </div>
+  </body>
+</html>
