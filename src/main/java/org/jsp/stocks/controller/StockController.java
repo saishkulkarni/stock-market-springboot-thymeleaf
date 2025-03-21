@@ -1,14 +1,18 @@
 package org.jsp.stocks.controller;
 
+import java.time.LocalDate;
+
 import org.jsp.stocks.dto.User;
 import org.jsp.stocks.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 @Controller
 public class StockController {
@@ -26,15 +30,25 @@ public class StockController {
 		return "login.html";
 	}
 
-	@PostMapping("/login")
-	public String login(@ModelAttribute User user, HttpSession session) {
-		return service.login(user, session);
+	@GetMapping("/register")
+	public String loadRegister(User user, Model model) {
+		model.addAttribute("user", user);
+		return "register.html";
 	}
 
-	@GetMapping("/logout")
-	public String logout(HttpSession session) {
-		session.removeAttribute("user");
-		session.removeAttribute("admin");
-		return "redirect:/";
+	@PostMapping("/register")
+	public String register(@ModelAttribute @Valid User user, BindingResult result) {
+		if(!user.getPassword().equals(user.getConfirmPassword()))
+			result.rejectValue("confirmPassword", "error.confirmPassword", "* Password and Confirm Password are Not Matching");
+		if(LocalDate.now().getYear()-user.getDob().getYear()<18)
+			result.rejectValue("dob", "error.dob", "* You should be 18+ to Create Account here");
+		
+		if (result.hasErrors()) {
+			return "register.html";
+		} else {
+			System.err.println(user);
+			return "otp.html";
+		}
 	}
+
 }
