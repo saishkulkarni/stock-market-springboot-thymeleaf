@@ -7,15 +7,22 @@ import org.jsp.stocks.dto.User;
 import org.jsp.stocks.repository.UserRepository;
 import org.jsp.stocks.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+
+import jakarta.mail.internet.MimeMessage;
 
 @Service
 public class StockServiceImpl implements StockService {
 
 	@Autowired
 	UserRepository userRepository;
+
+	@Autowired
+	JavaMailSender mailSender;
 
 	@Override
 	public String register(User user, Model model) {
@@ -66,7 +73,17 @@ public class StockServiceImpl implements StockService {
 
 	void sendEmail(User user) {
 		System.err.println("Hello " + user.getName() + " Your OTP is : " + user.getOtp());
-		
+
+		MimeMessage message = mailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message);
+		try {
+			helper.setFrom("saishkulkarni7@gmail.com", "StockMarketApp");
+			helper.setTo(user.getEmail());
+			helper.setSubject("OTP for Account Creation");
+			helper.setText("<h1>Hello " + user.getName() + " Your OTP is : " + user.getOtp()+"</h1>",true);
+			mailSender.send(message);
+		} catch (Exception e) {
+		}
 	}
 
 }
