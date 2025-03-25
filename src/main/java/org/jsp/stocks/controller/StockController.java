@@ -51,4 +51,5 @@ public class StockController {
 		return service.verifyOtp(id, otp);
 	}
 
+	
 }

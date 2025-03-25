@@ -50,6 +50,7 @@ public class StockServiceImpl implements StockService {
 		} else {
 			user.setOtp(generateOtp());
 			sendEmail(user);
+			user.setPassword(AES.encrypt(user.getPassword(), "123"));
 			userRepository.save(user);
 			return "redirect:/otp/" + user.getId();
 		}
@@ -85,5 +86,7 @@ public class StockServiceImpl implements StockService {
 		} catch (Exception e) {
 		}
 	}
+	
+	
 
 }
