@@ -6,6 +6,12 @@
     <title>Login</title>
 </head>
 <body>
+	<div>
+		<h3 style="color:green" th:text="${session.pass}"></h3>
+		<h3 style="color:red" th:text="${session.fail}"></h3>
+		<span th:text="${@stockServiceImpl.removeMessage()}"></span>
+	</div>
+	
     <form action="/login" method="post">
         Email: <input type="text" name="email"><br>
         Password: <input type="password" name="password">
