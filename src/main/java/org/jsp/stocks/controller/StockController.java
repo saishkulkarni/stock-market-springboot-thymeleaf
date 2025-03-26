@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @Controller
 public class StockController {
@@ -29,6 +31,12 @@ public class StockController {
 	public String loadLogin() {
 		return "login.html";
 	}
+
+	@PostMapping("/login")
+	public String loadLogin(@RequestParam String email, @RequestParam String Password) {
+		service.login(email, Password);
+	}
+	
 
 	@GetMapping("/otp/{id}")
 	public String loadOtpPage(@PathVariable int id, Model model) {

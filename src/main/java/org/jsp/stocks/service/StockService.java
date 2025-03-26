@@ -12,4 +12,6 @@ public interface StockService {
 
 	String verifyOtp(int id, int otp);
 
+    String login(String email, String password);
+
 }

@@ -1,6 +1,7 @@
 package org.jsp.stocks.service.implementation;
 
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.Random;
 
 import org.jsp.stocks.dto.User;
@@ -81,12 +82,37 @@ public class StockServiceImpl implements StockService {
 			helper.setFrom("saishkulkarni7@gmail.com", "StockMarketApp");
 			helper.setTo(user.getEmail());
 			helper.setSubject("OTP for Account Creation");
-			helper.setText("<h1>Hello " + user.getName() + " Your OTP is : " + user.getOtp()+"</h1>",true);
+			helper.setText("<h1>Hello " + user.getName() + " Your OTP is : " + user.getOtp() + "</h1>", true);
 			mailSender.send(message);
 		} catch (Exception e) {
 		}
 	}
-	
-	
+
+	@Override
+	public String login(String email, String password) {
+		Optional<User> user = (Optional<User>) userRepository.findByEmail(email);
+		if (user.isEmpty()) {
+			return "redirect:/login";
+		} else {
+			if (user.get().getPassword().equals(AES.decrypt(password, "123"))) {
+
+				if (user.get().isVerified()) {
+					return "redirect:/";
+				} else {
+					user.get().setOtp(generateOtp());
+					sendEmail(user.get());
+					user.get().setPassword(AES.encrypt(user.get().getPassword(), "123"));
+					userRepository.save(user.get());
+					return "redirect:/{otp}" + user.get().getId();
+				}
+
+			}
+			else{
+				return "redirect:/login";
+			}
+
+		}
+
+	}
 
 }
