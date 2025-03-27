@@ -8,6 +8,12 @@
 </head>
 
 <body>
+	<div>
+			<h3 style="color:green" th:text="${session.pass}"></h3>
+			<h3 style="color:red" th:text="${session.fail}"></h3>
+			<span th:text="${@stockServiceImpl.removeMessage()}"></span>
+		</div>
+		
     <form action="/register" method="post" th:object="${user}">
         Name: <input type="text" name="name" th:field="*{name}">
 		<span th:errors="*{name}"></span>

@@ -6,16 +6,29 @@
     <title>Main</title>
   </head>
   <body>
-      <a href="/register"><button>Register</button></a>
+	<div>
+			<h3 style="color:green" th:text="${session.pass}"></h3>
+			<h3 style="color:red" th:text="${session.fail}"></h3>
+			<span th:text="${@stockServiceImpl.removeMessage()}"></span>
+		</div>
+		
+	  <div th:if="${session.user==null && session.admin==null}">	
+	  <a href="/register"><button>Register</button></a>
       <a href="/login"><button>Login</button></a>
-    	<button>View Stocks</button>
+      </div>
+	  
+	  <div th:if="${session.user!=null}">
+	  <button>View Stocks</button>
       <button>Wallet</button>
       <button>Portfolio</button>
-   
-  
-      <button>Add Stock</button>
+	  <a href="/logout"><button>Logout</button></a>
+	  </div>
+	  
+	  <div th:if="${session.admin!=null}">
+	  <button>Add Stock</button>
       <button>Manage Stock</button>
       <button>View Overview</button>
-
+	  <a href="/logout"><button>Logout</button></a>
+	  </div>
   </body>
 </html>

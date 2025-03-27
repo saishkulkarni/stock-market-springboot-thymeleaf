@@ -7,6 +7,13 @@
 </head>
 <body>
     <h1>This is OTP Page</h1>
+	
+	<div>
+			<h3 style="color:green" th:text="${session.pass}"></h3>
+			<h3 style="color:red" th:text="${session.fail}"></h3>
+			<span th:text="${@stockServiceImpl.removeMessage()}"></span>
+		</div>
+	
 	<form action="/otp" method="post">
 		<input type="hidden" name="id" th:value="${id}">
 		<input type="text" name="otp" placeholder="Enter Otp"><br>
