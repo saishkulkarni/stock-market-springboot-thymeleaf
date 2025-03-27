@@ -1,5 +1,6 @@
 package org.jsp.stocks.controller;
 
+import org.jsp.stocks.dto.Stock;
 import org.jsp.stocks.dto.User;
 import org.jsp.stocks.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,8 @@ public class StockController {
 	}
 
 	@PostMapping("/register")
-	public String register(@ModelAttribute @Valid User user, BindingResult result,HttpSession session) {
-		return service.register(user, result,session);
+	public String register(@ModelAttribute @Valid User user, BindingResult result, HttpSession session) {
+		return service.register(user, result, session);
 	}
 
 	@GetMapping("/otp/{id}")
@@ -43,8 +44,8 @@ public class StockController {
 	}
 
 	@PostMapping("/otp")
-	public String verifyOtp(@RequestParam int id, @RequestParam int otp,HttpSession session) {
-		return service.verifyOtp(id, otp,session);
+	public String verifyOtp(@RequestParam int id, @RequestParam int otp, HttpSession session) {
+		return service.verifyOtp(id, otp, session);
 	}
 
 	@GetMapping("/login")
@@ -53,13 +54,22 @@ public class StockController {
 	}
 
 	@PostMapping("/login")
-	public String login(@RequestParam String email, @RequestParam String password,HttpSession session) {
-		return service.login(email, password,session);
+	public String login(@RequestParam String email, @RequestParam String password, HttpSession session) {
+		return service.login(email, password, session);
 	}
-	
+
 	@GetMapping("/logout")
 	public String logout(HttpSession session) {
 		return service.logout(session);
 	}
 
+	@GetMapping("/add-stock")
+	public String loadAddStock(HttpSession session) {
+		return service.addStock(session);
+	}
+
+	@PostMapping("/add-stock")
+	public String addStock(HttpSession session,Stock stock) {
+		return service.addStock(session,stock);
+	}
 }

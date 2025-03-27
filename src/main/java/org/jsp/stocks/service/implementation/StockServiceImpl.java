@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Random;
 
+import org.jsp.stocks.dto.Stock;
 import org.jsp.stocks.dto.User;
 import org.jsp.stocks.repository.UserRepository;
 import org.jsp.stocks.service.StockService;
@@ -14,6 +15,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -23,12 +25,18 @@ import jakarta.servlet.http.HttpSession;
 
 @Service
 public class StockServiceImpl implements StockService {
-	
+
+	@Autowired
+	RestTemplate restTemplate;
+
 	@Value("${admin.email}")
 	String adminEmail;
-	
+
 	@Value("${admin.password}")
 	String adminPassword;
+
+	@Value("${stock.api.key}")
+	String stockapikey;
 
 	@Autowired
 	UserRepository userRepository;
@@ -43,7 +51,7 @@ public class StockServiceImpl implements StockService {
 	}
 
 	@Override
-	public String register(User user, BindingResult result,HttpSession session) {
+	public String register(User user, BindingResult result, HttpSession session) {
 		if (!user.getPassword().equals(user.getConfirmPassword()))
 			result.rejectValue("confirmPassword", "error.confirmPassword",
 					"* Password and Confirm Password are Not Matching");
@@ -70,13 +78,13 @@ public class StockServiceImpl implements StockService {
 	}
 
 	@Override
-	public String verifyOtp(int id, int otp,HttpSession session) {
+	public String verifyOtp(int id, int otp, HttpSession session) {
 		User user = userRepository.findById(id).get();
 		if (user.getOtp() == otp) {
 			user.setVerified(true);
 			user.setOtp(0);
 			userRepository.save(user);
-			session.setAttribute("pass", "Account Created Success, Welcome "+user.getName());
+			session.setAttribute("pass", "Account Created Success, Welcome " + user.getName());
 			return "redirect:/login";
 		} else {
 			session.setAttribute("fail", "Invalid Otp Try Again");
@@ -85,32 +93,31 @@ public class StockServiceImpl implements StockService {
 	}
 
 	@Override
-	public String login(String email, String password,HttpSession session) {
-		if(email.equals(adminEmail) && password.equals(adminPassword)) {
+	public String login(String email, String password, HttpSession session) {
+		if (email.equals(adminEmail) && password.equals(adminPassword)) {
 			session.setAttribute("admin", "admin");
 			session.setAttribute("pass", "Login Success - Welcome Admin");
 			return "redirect:/";
 		}
-		
-		Optional<User> user=userRepository.findByEmail(email);
-		if(user.isEmpty()) {
+
+		Optional<User> user = userRepository.findByEmail(email);
+		if (user.isEmpty()) {
 			session.setAttribute("fail", "Invalid Email");
 			return "redirect:/login";
-		}else {
-			if(AES.decrypt(user.get().getPassword()).equals(password)) {
-				if(user.get().isVerified()) {
+		} else {
+			if (AES.decrypt(user.get().getPassword()).equals(password)) {
+				if (user.get().isVerified()) {
 					session.setAttribute("user", user.get());
-					session.setAttribute("pass", "Login Success, Welcome "+user.get().getName());
+					session.setAttribute("pass", "Login Success, Welcome " + user.get().getName());
 					return "redirect:/";
-				}
-				else {
+				} else {
 					user.get().setOtp(generateOtp());
 					sendEmail(user.get());
 					userRepository.save(user.get());
 					session.setAttribute("fail", "First Complete Verification in order to Login");
 					return "redirect:/otp/" + user.get().getId();
 				}
-			}else {
+			} else {
 				session.setAttribute("fail", "Invalid Password");
 				return "redirect:/login";
 			}
@@ -119,25 +126,27 @@ public class StockServiceImpl implements StockService {
 
 	@Override
 	public String logout(HttpSession session) {
-		User user=(User)session.getAttribute("user");
+		User user = (User) session.getAttribute("user");
 		session.removeAttribute("user");
 		session.removeAttribute("admin");
-		session.setAttribute("pass", "Logout Success, Sad to see you go Bye "+user.getName());
+		if (user != null)
+			session.setAttribute("pass", "Logout Success, Sad to see you go Bye " + user.getName());
 		return "redirect:/";
 	}
-	
+
 	public void removeMessage() {
-		ServletRequestAttributes attributes=(ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-		HttpServletRequest req=attributes.getRequest();
-		HttpSession session=req.getSession();
+		ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder
+				.currentRequestAttributes();
+		HttpServletRequest req = attributes.getRequest();
+		HttpSession session = req.getSession();
 		session.removeAttribute("pass");
 		session.removeAttribute("fail");
 	}
-	
+
 	int generateOtp() {
 		return new Random().nextInt(100000, 1000000);
 	}
-	
+
 	void sendEmail(User user) {
 		MimeMessage message = mailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message);
@@ -145,7 +154,7 @@ public class StockServiceImpl implements StockService {
 			helper.setFrom("saishkulkarni7@gmail.com", "StockMarketApp");
 			helper.setTo(user.getEmail());
 			helper.setSubject("OTP for Account Creation");
-			helper.setText("<h1>Hello " + user.getName() + " Your OTP is : " + user.getOtp()+"</h1>",true);
+			helper.setText("<h1>Hello " + user.getName() + " Your OTP is : " + user.getOtp() + "</h1>", true);
 			mailSender.send(message);
 		} catch (Exception e) {
 			System.err.println("Unable to Send Email");
@@ -153,4 +162,35 @@ public class StockServiceImpl implements StockService {
 		}
 	}
 
+	@Override
+	public String addStock(HttpSession session) {
+		if (session.getAttribute("admin") != null)
+			return "add-stock.html";
+		else {
+			session.setAttribute("fail", "Invalid Session, Login First");
+			return "redirect:/login";
+		}
+	}
+
+	@Override
+	public String addStock(HttpSession session, Stock stock) {
+		if (session.getAttribute("admin") != null) {
+			boolean flag = updateStockFromAPI(stock);
+			if (flag) {
+
+				session.setAttribute("pass", "Stock Added Success for " + stock.getCompanyName());
+				return "redirect:/";
+			} else {
+				session.setAttribute("fail", "Stock Not Found for " + stock.getCompanyName());
+				return "redirect:/";
+			}
+		} else {
+			session.setAttribute("fail", "Invalid Session, Login First");
+			return "redirect:/login";
+		}
+	}
+
+	public boolean updateStockFromAPI(Stock stock) {
+		return true;
+	}
 }
