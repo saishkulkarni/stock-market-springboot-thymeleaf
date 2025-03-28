@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Controller
@@ -38,10 +37,11 @@ public class StockController {
 		return service.register(user, result,session);
 	}
 
-	@PostMapping("/login")
-	public String loadLogin(@RequestParam String email, @RequestParam String Password) {
-		service.login(email, Password);
-	}
+	// @PostMapping("/login")
+	// public String loadLogin(@RequestParam String email, @RequestParam String Password) {
+	// 	service.login(email, Password);
+	// 	return "redirect:/";
+	// }
 	
 
 	@GetMapping("/otp/{id}")

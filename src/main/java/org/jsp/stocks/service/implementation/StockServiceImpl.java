@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Random;
 
+import org.jsp.stocks.dto.Stock;
 import org.jsp.stocks.dto.User;
 import org.jsp.stocks.repository.UserRepository;
 import org.jsp.stocks.service.StockService;
@@ -14,6 +15,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -29,6 +31,9 @@ public class StockServiceImpl implements StockService {
 	
 	@Value("${admin.password}")
 	String adminPassword;
+
+	@Value("${admin.api.key}")
+	String apiKey;
 
 	@Autowired
 	UserRepository userRepository;
@@ -83,34 +88,41 @@ public class StockServiceImpl implements StockService {
 			return "redirect:/otp/" + id;
 		}
 	}
+	public void removeMessage() {
+		ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder
+				.currentRequestAttributes();
+		HttpServletRequest req = attributes.getRequest();
+		HttpSession session = req.getSession();
+		session.removeAttribute("pass");
+		session.removeAttribute("fail");
+	}
 
 	@Override
-	public String login(String email, String password,HttpSession session) {
-		if(email.equals(adminEmail) && password.equals(adminPassword)) {
+	public String login(String email, String password, HttpSession session) {
+		if (email.equals(adminEmail) && password.equals(adminPassword)) {
 			session.setAttribute("admin", "admin");
 			session.setAttribute("pass", "Login Success - Welcome Admin");
 			return "redirect:/";
 		}
-		
-		Optional<User> user=userRepository.findByEmail(email);
-		if(user.isEmpty()) {
+
+		Optional<User> user = userRepository.findByEmail(email);
+		if (user.isEmpty()) {
 			session.setAttribute("fail", "Invalid Email");
 			return "redirect:/login";
-		}else {
-			if(AES.decrypt(user.get().getPassword()).equals(password)) {
-				if(user.get().isVerified()) {
+		} else {
+			if (AES.decrypt(user.get().getPassword()).equals(password)) {
+				if (user.get().isVerified()) {
 					session.setAttribute("user", user.get());
-					session.setAttribute("pass", "Login Success, Welcome "+user.get().getName());
+					session.setAttribute("pass", "Login Success, Welcome " + user.get().getName());
 					return "redirect:/";
-				}
-				else {
+				} else {
 					user.get().setOtp(generateOtp());
 					sendEmail(user.get());
 					userRepository.save(user.get());
 					session.setAttribute("fail", "First Complete Verification in order to Login");
 					return "redirect:/otp/" + user.get().getId();
 				}
-			}else {
+			} else {
 				session.setAttribute("fail", "Invalid Password");
 				return "redirect:/login";
 			}
@@ -119,21 +131,14 @@ public class StockServiceImpl implements StockService {
 
 	@Override
 	public String logout(HttpSession session) {
-		User user=(User)session.getAttribute("user");
+		User user = (User) session.getAttribute("user");
 		session.removeAttribute("user");
 		session.removeAttribute("admin");
-		session.setAttribute("pass", "Logout Success, Sad to see you go Bye "+user.getName());
+		if (user != null)
+			session.setAttribute("pass", "Logout Success, Sad to see you go Bye " + user.getName());
 		return "redirect:/";
 	}
-	
-	public void removeMessage() {
-		ServletRequestAttributes attributes=(ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-		HttpServletRequest req=attributes.getRequest();
-		HttpSession session=req.getSession();
-		session.removeAttribute("pass");
-		session.removeAttribute("fail");
-	}
-	
+
 	int generateOtp() {
 		return new Random().nextInt(100000, 1000000);
 	}
@@ -150,6 +155,22 @@ public class StockServiceImpl implements StockService {
 		} catch (Exception e) {
 			System.err.println("Unable to Send Email");
 			System.out.println("Hello " + user.getName() + " Your OTP is : " + user.getOtp());
+		}
+	}
+
+	@Override
+	public String login(String email, String password) {
+		throw new UnsupportedOperationException("Unimplemented method 'login'");
+	}
+
+	@Override
+	public String addStock(@RequestParam String ticker , HttpSession session) {
+		if (session.getAttribute("admin") != null) {
+			String addStockUrl =  "https://api.polygon.io/v2/aggs/ticker/"+ticker+"/range/1/minute/2024-03-27/2024-03-27?adjusted=true&sort=desc&limit=1&apiKey=" + apiKey;
+			return "redirect:/";
+		} else {
+			session.setAttribute("fail", "Invalid Session, Login First");
+			return "redirect:/login";
 		}
 	}
 
