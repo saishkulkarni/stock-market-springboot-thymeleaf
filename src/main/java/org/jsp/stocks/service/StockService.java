@@ -19,7 +19,7 @@ public interface StockService {
 
 	String logout(HttpSession session);
 
-	String addStock(HttpSession session);
+	String addStock(HttpSession session, Model model);
 
 	String addStock(HttpSession session, Stock stock);
 

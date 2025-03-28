@@ -72,12 +72,15 @@ public class StockController {
 	}
 
 	@GetMapping("/add-stock")
-	public String loadAddStock(HttpSession session) {
-		return service.addStock(session);
+	public String loadStock(HttpSession session, Model model) {
+
+		return service.addStock(session, model);
 	}
 
 	@PostMapping("/add-stock")
 	public String addStock(HttpSession session,Stock stock) {
 		return service.addStock(session,stock);
 	}
+	
+	
 }
