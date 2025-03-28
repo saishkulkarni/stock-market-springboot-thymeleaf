@@ -98,6 +98,15 @@ public class StockServiceImpl implements StockService {
 		}
 	}
 
+	public void removeMessage() {
+		ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder
+				.currentRequestAttributes();
+		HttpServletRequest req = attributes.getRequest();
+		HttpSession session = req.getSession();
+		session.removeAttribute("pass");
+		session.removeAttribute("fail");
+	}
+
 	@Override
 	public String login(String email, String password, HttpSession session) {
 		if (email.equals(adminEmail) && password.equals(adminPassword)) {
@@ -140,15 +149,6 @@ public class StockServiceImpl implements StockService {
 		return "redirect:/";
 	}
 
-	public void removeMessage() {
-		ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder
-				.currentRequestAttributes();
-		HttpServletRequest req = attributes.getRequest();
-		HttpSession session = req.getSession();
-		session.removeAttribute("pass");
-		session.removeAttribute("fail");
-	}
-
 	int generateOtp() {
 		return new Random().nextInt(100000, 1000000);
 	}
@@ -169,9 +169,12 @@ public class StockServiceImpl implements StockService {
 	}
 
 	@Override
-	public String addStock(HttpSession session) {
-		if (session.getAttribute("admin") != null)
+	public String addStock(HttpSession session, Model model) {
+		if (session.getAttribute("admin") != null){
+			List<Stock> allStocks = stockRepository.findAll();
+			model.addAttribute("allStocks", allStocks);
 			return "add-stock.html";
+		}
 		else {
 			session.setAttribute("fail", "Invalid Session, Login First");
 			return "redirect:/login";
@@ -202,8 +205,10 @@ public class StockServiceImpl implements StockService {
 	}
 
 	public boolean updateStockFromAPI(Stock stock) {
-		String url = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=" + stock.getTicker() + "&apikey="
+		String url = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=" + stock.getTicker()+".BSE" + "&apikey="
 				+ stockapikey;
+
+
 		Map<String, Object> response = restTemplate.getForObject(url, Map.class);
 		Map<String, Object> quote = (Map<String, Object>) response.get("Global Quote");
 		if (!quote.isEmpty()) {
@@ -212,7 +217,7 @@ public class StockServiceImpl implements StockService {
 			stock.setChanges(Double.parseDouble(quote.get("10. change percent").toString().replace("%", "")));
 
 			String nameFetchEndpoint = "https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords="
-					+ stock.getTicker() + "&apikey=" + stockapikey;
+					+ stock.getTicker()+".BSE" + "&apikey=" + stockapikey;
 
 			Map<String, Object> name = restTemplate.getForObject(nameFetchEndpoint, Map.class);
 			List<Map<String, String>> bestMatches = (List<Map<String, String>>) name.get("bestMatches");
@@ -224,3 +229,4 @@ public class StockServiceImpl implements StockService {
 		return false;
 	}
 }
+
