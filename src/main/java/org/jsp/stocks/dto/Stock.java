@@ -1,9 +1,20 @@
 package org.jsp.stocks.dto;
 
-import lombok.Data;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-@Data
+@Setter
+@Getter
+@ToString
+@Entity
 public class Stock {
-    String ticker;
-    String stockName;
+	@Id
+	private String ticker;
+	private String companyName;
+	private double price;
+	private double changes;
+	private double quantity;
 }

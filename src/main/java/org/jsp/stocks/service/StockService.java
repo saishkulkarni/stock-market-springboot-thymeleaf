@@ -19,7 +19,8 @@ public interface StockService {
 
 	String logout(HttpSession session);
 
-    String login(String email, String password);
-	String addStock(String ticker,HttpSession session);
+	String addStock(HttpSession session);
+
+	String addStock(HttpSession session, Stock stock);
 
 }

@@ -1,11 +1,14 @@
 package org.jsp.stocks.service.implementation;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
 import org.jsp.stocks.dto.Stock;
 import org.jsp.stocks.dto.User;
+import org.jsp.stocks.repository.StockRepository;
 import org.jsp.stocks.repository.UserRepository;
 import org.jsp.stocks.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +18,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -25,15 +28,21 @@ import jakarta.servlet.http.HttpSession;
 
 @Service
 public class StockServiceImpl implements StockService {
-	
+
+	@Autowired
+	RestTemplate restTemplate;
+
+	@Autowired
+	StockRepository stockRepository;
+
 	@Value("${admin.email}")
 	String adminEmail;
-	
+
 	@Value("${admin.password}")
 	String adminPassword;
 
-	@Value("${admin.api.key}")
-	String apiKey;
+	@Value("${stock.api.key}")
+	String stockapikey;
 
 	@Autowired
 	UserRepository userRepository;
@@ -48,7 +57,7 @@ public class StockServiceImpl implements StockService {
 	}
 
 	@Override
-	public String register(User user, BindingResult result,HttpSession session) {
+	public String register(User user, BindingResult result, HttpSession session) {
 		if (!user.getPassword().equals(user.getConfirmPassword()))
 			result.rejectValue("confirmPassword", "error.confirmPassword",
 					"* Password and Confirm Password are Not Matching");
@@ -75,13 +84,13 @@ public class StockServiceImpl implements StockService {
 	}
 
 	@Override
-	public String verifyOtp(int id, int otp,HttpSession session) {
+	public String verifyOtp(int id, int otp, HttpSession session) {
 		User user = userRepository.findById(id).get();
 		if (user.getOtp() == otp) {
 			user.setVerified(true);
 			user.setOtp(0);
 			userRepository.save(user);
-			session.setAttribute("pass", "Account Created Success, Welcome "+user.getName());
+			session.setAttribute("pass", "Account Created Success, Welcome " + user.getName());
 			return "redirect:/login";
 		} else {
 			session.setAttribute("fail", "Invalid Otp Try Again");
@@ -139,10 +148,19 @@ public class StockServiceImpl implements StockService {
 		return "redirect:/";
 	}
 
+	public void removeMessage() {
+		ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder
+				.currentRequestAttributes();
+		HttpServletRequest req = attributes.getRequest();
+		HttpSession session = req.getSession();
+		session.removeAttribute("pass");
+		session.removeAttribute("fail");
+	}
+
 	int generateOtp() {
 		return new Random().nextInt(100000, 1000000);
 	}
-	
+
 	void sendEmail(User user) {
 		MimeMessage message = mailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message);
@@ -159,19 +177,58 @@ public class StockServiceImpl implements StockService {
 	}
 
 	@Override
-	public String login(String email, String password) {
-		throw new UnsupportedOperationException("Unimplemented method 'login'");
+	public String addStock(HttpSession session) {
+		if (session.getAttribute("admin") != null)
+			return "add-stock.html";
+		else {
+			session.setAttribute("fail", "Invalid Session, Login First");
+			return "redirect:/login";
+		}
 	}
 
 	@Override
-	public String addStock(@RequestParam String ticker , HttpSession session) {
+	public String addStock(HttpSession session, Stock stock) {
 		if (session.getAttribute("admin") != null) {
-			String addStockUrl =  "https://api.polygon.io/v2/aggs/ticker/"+ticker+"/range/1/minute/2024-03-27/2024-03-27?adjusted=true&sort=desc&limit=1&apiKey=" + apiKey;
-			return "redirect:/";
+			boolean flag = updateStockFromAPI(stock);
+			if (flag) {
+				if (stockRepository.existsById(stock.getTicker())) {
+					session.setAttribute("fail", "Stock Already Present for " + stock.getCompanyName());
+					return "redirect:/";
+				} else {
+					stockRepository.save(stock);
+					session.setAttribute("pass", "Stock Added Success for " + stock.getCompanyName());
+					return "redirect:/";
+				}
+			} else {
+				session.setAttribute("fail", "Stock Not Found for " + stock.getTicker());
+				return "redirect:/";
+			}
 		} else {
 			session.setAttribute("fail", "Invalid Session, Login First");
 			return "redirect:/login";
 		}
 	}
 
+	public boolean updateStockFromAPI(Stock stock) {
+		String url = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=" + stock.getTicker() + "&apikey="
+				+ stockapikey;
+		Map<String, Object> response = restTemplate.getForObject(url, Map.class);
+		Map<String, Object> quote = (Map<String, Object>) response.get("Global Quote");
+		if (!quote.isEmpty()) {
+			stock.setPrice(Double.parseDouble(quote.get("05. price").toString()));
+			stock.setQuantity(Double.parseDouble(quote.get("06. volume").toString()));
+			stock.setChanges(Double.parseDouble(quote.get("10. change percent").toString().replace("%", "")));
+
+			String nameFetchEndpoint = "https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords="
+					+ stock.getTicker() + "&apikey=" + stockapikey;
+
+			Map<String, Object> name = restTemplate.getForObject(nameFetchEndpoint, Map.class);
+			List<Map<String, String>> bestMatches = (List<Map<String, String>>) name.get("bestMatches");
+			if (!bestMatches.isEmpty()) {
+				stock.setCompanyName(bestMatches.get(0).get("2. name"));
+			}
+			return true;
+		}
+		return false;
+	}
 }
