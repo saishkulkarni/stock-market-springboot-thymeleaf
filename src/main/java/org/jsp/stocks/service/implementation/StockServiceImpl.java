@@ -148,14 +148,7 @@ public class StockServiceImpl implements StockService {
 		return "redirect:/";
 	}
 
-	public void removeMessage() {
-		ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder
-				.currentRequestAttributes();
-		HttpServletRequest req = attributes.getRequest();
-		HttpSession session = req.getSession();
-		session.removeAttribute("pass");
-		session.removeAttribute("fail");
-	}
+	
 
 	int generateOtp() {
 		return new Random().nextInt(100000, 1000000);
