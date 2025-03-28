@@ -1,11 +1,14 @@
 package org.jsp.stocks.service.implementation;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
 import org.jsp.stocks.dto.Stock;
 import org.jsp.stocks.dto.User;
+import org.jsp.stocks.repository.StockRepository;
 import org.jsp.stocks.repository.UserRepository;
 import org.jsp.stocks.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +31,9 @@ public class StockServiceImpl implements StockService {
 
 	@Autowired
 	RestTemplate restTemplate;
+
+	@Autowired
+	StockRepository stockRepository;
 
 	@Value("${admin.email}")
 	String adminEmail;
@@ -177,11 +183,16 @@ public class StockServiceImpl implements StockService {
 		if (session.getAttribute("admin") != null) {
 			boolean flag = updateStockFromAPI(stock);
 			if (flag) {
-
-				session.setAttribute("pass", "Stock Added Success for " + stock.getCompanyName());
-				return "redirect:/";
+				if (stockRepository.existsById(stock.getTicker())) {
+					session.setAttribute("fail", "Stock Already Present for " + stock.getCompanyName());
+					return "redirect:/";
+				} else {
+					stockRepository.save(stock);
+					session.setAttribute("pass", "Stock Added Success for " + stock.getCompanyName());
+					return "redirect:/";
+				}
 			} else {
-				session.setAttribute("fail", "Stock Not Found for " + stock.getCompanyName());
+				session.setAttribute("fail", "Stock Not Found for " + stock.getTicker());
 				return "redirect:/";
 			}
 		} else {
@@ -191,6 +202,25 @@ public class StockServiceImpl implements StockService {
 	}
 
 	public boolean updateStockFromAPI(Stock stock) {
-		return true;
+		String url = "https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=" + stock.getTicker() + "&apikey="
+				+ stockapikey;
+		Map<String, Object> response = restTemplate.getForObject(url, Map.class);
+		Map<String, Object> quote = (Map<String, Object>) response.get("Global Quote");
+		if (!quote.isEmpty()) {
+			stock.setPrice(Double.parseDouble(quote.get("05. price").toString()));
+			stock.setQuantity(Double.parseDouble(quote.get("06. volume").toString()));
+			stock.setChanges(Double.parseDouble(quote.get("10. change percent").toString().replace("%", "")));
+
+			String nameFetchEndpoint = "https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords="
+					+ stock.getTicker() + "&apikey=" + stockapikey;
+
+			Map<String, Object> name = restTemplate.getForObject(nameFetchEndpoint, Map.class);
+			List<Map<String, String>> bestMatches = (List<Map<String, String>>) name.get("bestMatches");
+			if (!bestMatches.isEmpty()) {
+				stock.setCompanyName(bestMatches.get(0).get("2. name"));
+			}
+			return true;
+		}
+		return false;
 	}
 }
