@@ -3,16 +3,231 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Stock</title>
+    <title>StockMarket - Add Stock</title>
+    <style>
+        :root {
+            --primary-color: #2e7d32;
+            --secondary-color: #1565c0;
+            --accent-color: #f57c00;
+            --danger-color: #c62828;
+            --light-color: #f5f5f5;
+            --dark-color: #212121;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f9f9f9;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 20px 0;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .logo span {
+            color: var(--accent-color);
+        }
+        
+        .notification {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow);
+        }
+        
+        .success-message {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .error-message {
+            color: var(--danger-color);
+            font-weight: 600;
+        }
+        
+        .main-content {
+            background-color: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .page-title {
+            color: var(--secondary-color);
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        
+        .page-description {
+            color: #555;
+            margin-bottom: 30px;
+            max-width: 600px;
+        }
+        
+        .stock-form {
+            width: 100%;
+            max-width: 500px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+        }
+        
+        .form-control {
+            flex: 1;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px 0 0 4px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(21, 101, 192, 0.2);
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            font-size: 16px;
+            min-width: 100px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #1b5e20;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: white;
+            margin-top: 20px;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #0d47a1;
+            transform: translateY(-2px);
+        }
+        
+        .form-btn {
+            border-radius: 0 4px 4px 0;
+            padding: 15px 20px;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 20px;
+            }
+            
+            .form-group {
+                flex-direction: column;
+            }
+            
+            .form-control {
+                border-radius: 4px;
+                margin-bottom: 10px;
+            }
+            
+            .form-btn {
+                border-radius: 4px;
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
-        <h1>Add Stock</h1>
-
-        <form action="/add-stock" method="post">
-            <input type="text" placeholder="Enter Company Ticker" name="ticker">
-            <button>Add</button>
-        </form>
-
-        <a href="/"><button>Back</button></a>
+    <header>
+        <div class="container header-content">
+            <div class="logo">Stock<span>Market</span></div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="notification" th:if="${session.pass != null || session.fail != null}">
+            <h3 class="success-message" th:if="${session.pass != null}" th:text="${session.pass}"></h3>
+            <h3 class="error-message" th:if="${session.fail != null}" th:text="${session.fail}"></h3>
+            <span th:text="${@stockServiceImpl.removeMessage()}"></span>
+        </div>
+        
+        <div class="main-content">
+            <h2 class="page-title">Add New Stock</h2>
+            <p class="page-description">Enter the company ticker symbol to add a new stock to the platform.</p>
+            
+            <form class="stock-form" action="/add-stock" method="post">
+                <div class="form-group">
+                    <input type="text" class="form-control" name="ticker" placeholder="Enter Company Ticker (e.g., AAPL, MSFT)" required>
+                    <button type="submit" class="btn btn-primary form-btn">Add</button>
+                </div>
+            </form>
+            
+            <a href="/" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 StockMarket. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
 </html>

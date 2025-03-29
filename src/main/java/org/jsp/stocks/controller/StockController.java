@@ -72,4 +72,9 @@ public class StockController {
 	public String addStock(HttpSession session,Stock stock) {
 		return service.addStock(session,stock);
 	}
+	
+	@GetMapping("/manage-stocks")
+	public String manageStocks(HttpSession session,Model model) {
+		return service.fetchStocks(session,model);
+	}
 }

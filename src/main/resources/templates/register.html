@@ -1,40 +1,252 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>StockMarket - Register</title>
+    <style>
+        :root {
+            --primary-color: #2e7d32;
+            --secondary-color: #1565c0;
+            --accent-color: #f57c00;
+            --danger-color: #c62828;
+            --light-color: #f5f5f5;
+            --dark-color: #212121;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f9f9f9;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 20px 0;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .logo span {
+            color: var(--accent-color);
+        }
+        
+        .notification {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow);
+        }
+        
+        .success-message {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .error-message {
+            color: var(--danger-color);
+            font-weight: 600;
+        }
+        
+        .main-content {
+            background-color: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            min-height: 400px;
+        }
+        
+        .form-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--secondary-color);
+            font-size: 28px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(21, 101, 192, 0.2);
+        }
+        
+        .error-text {
+            display: block;
+            color: var(--danger-color);
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            font-size: 16px;
+            min-width: 150px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #1b5e20;
+            transform: translateY(-2px);
+        }
+        
+        .form-actions {
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: var(--secondary-color);
+            text-decoration: none;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 20px;
+            }
+        }
+    </style>
 </head>
-
 <body>
-	<div>
-			<h3 style="color:green" th:text="${session.pass}"></h3>
-			<h3 style="color:red" th:text="${session.fail}"></h3>
-			<span th:text="${@stockServiceImpl.removeMessage()}"></span>
-		</div>
-		
-    <form action="/register" method="post" th:object="${user}">
-        Name: <input type="text" name="name" th:field="*{name}">
-		<span th:errors="*{name}"></span>
-		<br><br>
-        Email: <input type="text" name="email" th:field="*{email}">
-		<span th:errors="*{email}"></span>
-		<br><br>
-        Mobile: <input type="number" name="mobile" th:field="*{mobile}">
-		<span th:errors="*{mobile}"></span>
-		<br><br>
-        DOB: <input type="date" name="dob" th:field="*{dob}">
-		<span th:errors="*{dob}"></span>
-		<br><br>
-        Password: <input type="text" name="password" th:field="*{password}">
-		<span th:errors="*{password}"></span>
-		<br><br>
-        ConfirmPassword: <input type="text" name="confirmPassword" th:field="*{confirmPassword}">
-		<span th:errors="*{confirmPassword}"></span>
-		<br><br>
-        <button>Register</button>
-    </form>
+    <header>
+        <div class="container header-content">
+            <div class="logo">Stock<span>Market</span></div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="notification" th:if="${session.pass != null || session.fail != null}">
+            <h3 class="success-message" th:if="${session.pass != null}" th:text="${session.pass}"></h3>
+            <h3 class="error-message" th:if="${session.fail != null}" th:text="${session.fail}"></h3>
+            <span th:text="${@stockServiceImpl.removeMessage()}"></span>
+        </div>
+        
+        <div class="main-content">
+            <h2 class="form-title">Create Your Account</h2>
+            
+            <form action="/register" method="post" th:object="${user}">
+                <div class="form-group">
+                    <label class="form-label" for="name">Full Name</label>
+                    <input type="text" id="name" class="form-control" th:field="*{name}" placeholder="Enter your full name">
+                    <span class="error-text" th:errors="*{name}"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="email">Email Address</label>
+                    <input type="email" id="email" class="form-control" th:field="*{email}" placeholder="Enter your email address">
+                    <span class="error-text" th:errors="*{email}"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="mobile">Mobile Number</label>
+                    <input type="number" id="mobile" class="form-control" th:field="*{mobile}" placeholder="Enter your mobile number">
+                    <span class="error-text" th:errors="*{mobile}"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="dob">Date of Birth</label>
+                    <input type="date" id="dob" class="form-control" th:field="*{dob}">
+                    <span class="error-text" th:errors="*{dob}"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <input type="password" id="password" class="form-control" th:field="*{password}" placeholder="Create a strong password">
+                    <span class="error-text" th:errors="*{password}"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" class="form-control" th:field="*{confirmPassword}" placeholder="Confirm your password">
+                    <span class="error-text" th:errors="*{confirmPassword}"></span>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Register</button>
+                </div>
+            </form>
+            
+            <a href="/" class="back-link">Back to Home</a>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 StockMarket. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
-
 </html>

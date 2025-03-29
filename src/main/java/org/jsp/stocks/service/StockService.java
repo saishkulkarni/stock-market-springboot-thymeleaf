@@ -23,4 +23,6 @@ public interface StockService {
 
 	String addStock(HttpSession session, Stock stock);
 
+	String fetchStocks(HttpSession session, Model model);
+
 }

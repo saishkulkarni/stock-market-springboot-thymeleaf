@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StockMarket - Manage Stocks</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2e7d32;
+            --secondary-color: #1565c0;
+            --accent-color: #f57c00;
+            --danger-color: #c62828;
+            --success-color: #2e7d32;
+            --light-color: #f5f5f5;
+            --dark-color: #212121;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --card-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f9f9f9;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 20px 0;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .logo span {
+            color: var(--accent-color);
+        }
+        
+        .notification {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow);
+        }
+        
+        .success-message {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .error-message {
+            color: var(--danger-color);
+            font-weight: 600;
+        }
+        
+        .main-content {
+            background-color: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+        }
+        
+        .page-title {
+            color: var(--secondary-color);
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .page-description {
+            color: #555;
+            margin-bottom: 30px;
+        }
+        
+        .stock-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .stock-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stock-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stock-card.positive {
+            border-left: 4px solid var(--success-color);
+        }
+        
+        .stock-card.negative {
+            border-left: 4px solid var(--danger-color);
+        }
+        
+        .stock-ticker {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin-bottom: 5px;
+        }
+        
+        .stock-company {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .stock-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .stock-price {
+            font-size: 22px;
+            font-weight: bold;
+        }
+        
+        .stock-change {
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 20px;
+        }
+        
+        .stock-change.positive {
+            background-color: rgba(46, 125, 50, 0.1);
+            color: var(--success-color);
+        }
+        
+        .stock-change.negative {
+            background-color: rgba(198, 40, 40, 0.1);
+            color: var(--danger-color);
+        }
+        
+        .change-icon {
+            margin-right: 5px;
+            font-size: 14px;
+        }
+        
+        .stock-volume {
+            margin-top: 10px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .stock-volume span {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .graph-indicator {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 80px;
+            height: 40px;
+            opacity: 0.2;
+            z-index: 0;
+        }
+        
+        .graph-indicator.positive {
+            color: var(--success-color);
+        }
+        
+        .graph-indicator.negative {
+            color: var(--danger-color);
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            font-size: 16px;
+            min-width: 150px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 30px;
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #0d47a1;
+            transform: translateY(-2px);
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .stock-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">Stock<span>Market</span></div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="notification" th:if="${session.pass != null || session.fail != null}">
+            <h3 class="success-message" th:if="${session.pass != null}" th:text="${session.pass}"></h3>
+            <h3 class="error-message" th:if="${session.fail != null}" th:text="${session.fail}"></h3>
+            <span th:text="${@stockServiceImpl.removeMessage()}"></span>
+        </div>
+        
+        <div class="main-content">
+            <h2 class="page-title">Stock Market Overview</h2>
+            <p class="page-description">Monitor and manage all available stocks in the platform.</p>
+            
+            <div class="stock-grid">
+                <div th:each="stock:${stocks}" th:class="${stock.changes >= 0 ? 'stock-card positive' : 'stock-card negative'}">
+                    <h3 class="stock-ticker" th:text="${stock.ticker}"></h3>
+                    <p class="stock-company" th:text="${stock.companyName}"></p>
+                    
+                    <div class="stock-details">
+                        <div class="stock-price" th:text="'$' + ${stock.price}"></div>
+                        <div th:class="${stock.changes >= 0 ? 'stock-change positive' : 'stock-change negative'}">
+                            <i th:class="${stock.changes >= 0 ? 'fas fa-arrow-up change-icon' : 'fas fa-arrow-down change-icon'}"></i>
+                            <span th:text="${stock.changes >= 0 ? '+' + stock.changes + '%' : stock.changes + '%'}"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="stock-volume">Volume: <span th:text="${stock.quantity}"></span> shares</div>
+                    
+                    <div th:class="${stock.changes >= 0 ? 'graph-indicator positive' : 'graph-indicator negative'}">
+                        <i th:class="${stock.changes >= 0 ? 'fas fa-chart-line fa-3x' : 'fas fa-chart-line fa-3x fa-flip-vertical'}"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <a href="/" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 StockMarket. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

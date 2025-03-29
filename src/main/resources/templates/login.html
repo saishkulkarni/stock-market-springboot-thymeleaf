@@ -3,19 +3,243 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>StockMarket - Login</title>
+    <style>
+        :root {
+            --primary-color: #2e7d32;
+            --secondary-color: #1565c0;
+            --accent-color: #f57c00;
+            --danger-color: #c62828;
+            --light-color: #f5f5f5;
+            --dark-color: #212121;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f9f9f9;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 20px 0;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .logo span {
+            color: var(--accent-color);
+        }
+        
+        .notification {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow);
+        }
+        
+        .success-message {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .error-message {
+            color: var(--danger-color);
+            font-weight: 600;
+        }
+        
+        .main-content {
+            background-color: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .login-title {
+            color: var(--secondary-color);
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        
+        .login-description {
+            color: #555;
+            margin-bottom: 30px;
+            max-width: 600px;
+        }
+        
+        .login-form {
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+            text-align: left;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(21, 101, 192, 0.2);
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            font-size: 16px;
+            min-width: 150px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            width: 100%;
+            padding: 15px;
+        }
+        
+        .btn-primary:hover {
+            background-color: #1b5e20;
+            transform: translateY(-2px);
+        }
+        
+        .register-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: var(--secondary-color);
+            text-decoration: none;
+        }
+        
+        .register-link:hover {
+            text-decoration: underline;
+        }
+        
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 20px;
+            }
+        }
+    </style>
 </head>
 <body>
-	<div>
-		<h3 style="color:green" th:text="${session.pass}"></h3>
-		<h3 style="color:red" th:text="${session.fail}"></h3>
-		<span th:text="${@stockServiceImpl.removeMessage()}"></span>
-	</div>
-	
-    <form action="/login" method="post">
-        Email: <input type="text" name="email"><br>
-        Password: <input type="password" name="password">
-        <button>Login</button>
-    </form>
+    <header>
+        <div class="container header-content">
+            <div class="logo">Stock<span>Market</span></div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="notification" th:if="${session.pass != null || session.fail != null}">
+            <h3 class="success-message" th:if="${session.pass != null}" th:text="${session.pass}"></h3>
+            <h3 class="error-message" th:if="${session.fail != null}" th:text="${session.fail}"></h3>
+            <span th:text="${@stockServiceImpl.removeMessage()}"></span>
+        </div>
+        
+        <div class="main-content">
+            <h2 class="login-title">Welcome Back</h2>
+            <p class="login-description">Sign in to access your account and manage your investments.</p>
+            
+            <form class="login-form" action="/login" method="post">
+                <div class="form-group">
+                    <label class="form-label" for="email">Email Address</label>
+                    <input type="email" id="email" class="form-control" name="email" placeholder="Enter your email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <input type="password" id="password" class="form-control" name="password" placeholder="Enter your password" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Login</button>
+            </form>
+            
+            <a href="/register" class="register-link">Don't have an account? Register now</a>
+            <a href="/" class="back-link">Back to Home</a>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 StockMarket. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
 </html>
