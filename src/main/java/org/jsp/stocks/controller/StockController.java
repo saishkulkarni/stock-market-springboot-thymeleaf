@@ -77,4 +77,19 @@ public class StockController {
 	public String manageStocks(HttpSession session,Model model) {
 		return service.fetchStocks(session,model);
 	}
+	
+	@GetMapping("/delete-stock/{ticker}")
+	public String deleteStock(@PathVariable String ticker,HttpSession session) {
+		return service.deleteStock(ticker,session);
+	}
+	
+	@GetMapping("/view-stocks")
+	public String viewStocks(HttpSession session,Model model,@RequestParam(required = false) String company) {
+		return service.viewStocks(session,model,company);
+	}
+	
+	@GetMapping("/wallet")
+	public String viewWallet(HttpSession session,Model model) {
+		return service.viewWallet(session,model);
+	}
 }

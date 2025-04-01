@@ -284,12 +284,15 @@
         <div class="main-content">
             <h2 class="page-title">Stock Market Overview</h2>
             <p class="page-description">Monitor and manage all available stocks in the platform.</p>
-            
+            <form action="/view-stocks">
+            <input type="text" id="search-input" name="company" placeholder="Search stocks..." />
+                <button>Search</button>
+        </form>
             <div class="stock-grid">
                 <div th:each="stock:${stocks}" th:class="${stock.changes >= 0 ? 'stock-card positive' : 'stock-card negative'}">
                     <h3 class="stock-ticker" th:text="${stock.ticker}"></h3>
                     <p class="stock-company" th:text="${stock.companyName}"></p>
-                    
+                
                     <div class="stock-details">
                         <div class="stock-price" th:text="'₹' + ${stock.price}"></div>
                         <div th:class="${stock.changes >= 0 ? 'stock-change positive' : 'stock-change negative'}">
@@ -301,8 +304,8 @@
                     <div class="stock-volume">Volume: <span th:text="${stock.quantity}"></span> shares</div>
                     
                     <div class="stock-actions">
-                        <a th:href="'/delete-stock/'+${stock.ticker}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this stock?')">
-                            <i class="fas fa-trash"></i> Delete
+                        <a th:href="'/buy-stock/'+${stock.ticker}" class="btn btn-success" onclick="return confirm('Are you sure you want to delete this stock?')">
+                           Buy
                         </a>
                     </div>
                     

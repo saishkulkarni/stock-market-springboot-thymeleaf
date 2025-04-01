@@ -45,4 +45,6 @@ public class User {
 	private String confirmPassword;
 	private int otp;
 	private boolean verified;
+	
+	private double amount;
 }

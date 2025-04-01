@@ -207,7 +207,10 @@ public class StockServiceImpl implements StockService {
 		Map<String, Object> response = restTemplate.getForObject(url, Map.class);
 		Map<String, Object> quote = (Map<String, Object>) response.get("Global Quote");
 		if (!quote.isEmpty()) {
-			stock.setPrice(Double.parseDouble(quote.get("05. price").toString()));
+			if (stock.getTicker().contains(".BSE"))
+				stock.setPrice(Double.parseDouble(quote.get("05. price").toString()));
+			else
+				stock.setPrice(Double.parseDouble(quote.get("05. price").toString()) * 85.55);
 			stock.setQuantity(Double.parseDouble(quote.get("06. volume").toString()));
 			stock.setChanges(Double.parseDouble(quote.get("10. change percent").toString().replace("%", "")));
 
@@ -235,6 +238,52 @@ public class StockServiceImpl implements StockService {
 				model.addAttribute("stocks", stocks);
 				return "admin-view-stocks.html";
 			}
+		} else {
+			session.setAttribute("fail", "Invalid Session, Login First");
+			return "redirect:/login";
+		}
+	}
+
+	@Override
+	public String deleteStock(String ticker, HttpSession session) {
+		if (session.getAttribute("admin") != null) {
+			stockRepository.deleteById(ticker);
+			session.setAttribute("pass", "Stock deleted Success");
+			return "redirect:/manage-stocks";
+		} else {
+			session.setAttribute("fail", "Invalid Session, Login First");
+			return "redirect:/login";
+		}
+	}
+
+	@Override
+	public String viewStocks(HttpSession session, Model model, String company) {
+		if (session.getAttribute("user") != null) {
+			List<Stock> stocks;
+			if (company == null)
+				stocks = stockRepository.findAll();
+			else
+				stocks = stockRepository.findByCompanyNameLike("%" + company + "%");
+
+			if (stocks.isEmpty()) {
+				session.setAttribute("fail", "No Stocks Present");
+				return "redirect:/";
+			} else {
+				model.addAttribute("stocks", stocks);
+				return "user-view-stocks.html";
+			}
+		} else {
+			session.setAttribute("fail", "Invalid Session, Login First");
+			return "redirect:/login";
+		}
+	}
+
+	@Override
+	public String viewWallet(HttpSession session, Model model) {
+		if (session.getAttribute("user") != null) {
+			User user = (User) session.getAttribute("user");
+			model.addAttribute("amount", user.getAmount());
+			return "wallet.html";
 		} else {
 			session.setAttribute("fail", "Invalid Session, Login First");
 			return "redirect:/login";

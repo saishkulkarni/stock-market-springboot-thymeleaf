@@ -25,4 +25,10 @@ public interface StockService {
 
 	String fetchStocks(HttpSession session, Model model);
 
+	String deleteStock(String ticker, HttpSession session);
+
+	String viewStocks(HttpSession session, Model model, String company);
+
+	String viewWallet(HttpSession session, Model model);
+
 }
