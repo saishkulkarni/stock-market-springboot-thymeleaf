@@ -38,7 +38,11 @@
         <div class="label">Current Balance</div>
         <div class="balance"><span id="amount" th:text="${amount}"></span>&#8377</div>
     </div>
+
+    <form action="/recharge">
+    <input type="number" name="amount" id="amount" placeholder="Enter Amount">
     <button>Recharge Your Wallet</button>
-   
+    </form>
+
 </body>
 </html>

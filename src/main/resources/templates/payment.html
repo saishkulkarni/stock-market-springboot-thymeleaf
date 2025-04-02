@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button id="rzp-button1">Pay with Razorpay</button>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script th:inline="javascript">
+var options = {
+    "key": [[${key}]],
+    "amount": [[${orderAmount}]],
+    "currency": [[${currency}]],
+    "name": "Stock Market App",
+    "description": "Recharge Wallet",
+    "image": "https://img.etimg.com/thumb/width-1200,height-900,imgsize-58262,resizemode-75,msid-118580149/markets/stocks/news/ahead-of-market-10-things-that-will-decide-stock-market-action-on-thursday.jpg",
+    "order_id": [[${orderId}]],
+    "callback_url": "/wallet/[[${orderAmount}]]",
+    "prefill": {
+        "name": [[${session.user.name}]],
+        "email": [[${session.user.email}]],
+        "contact": [[${session.user.mobile}]]
+    },
+    "notes": {
+        "address": "Razorpay Corporate Office"
+    },
+    "theme": {
+        "color": "#F7374F"
+    }
+};
+var rzp1 = new Razorpay(options);
+document.getElementById('rzp-button1').onclick = function(e){
+    rzp1.open();
+    e.preventDefault();
+}
+</script>
+</body>
+</html>

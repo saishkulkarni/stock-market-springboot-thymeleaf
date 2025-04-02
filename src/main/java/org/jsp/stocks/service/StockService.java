@@ -5,6 +5,8 @@ import org.jsp.stocks.dto.User;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
+import com.razorpay.RazorpayException;
+
 import jakarta.servlet.http.HttpSession;
 
 public interface StockService {
@@ -30,5 +32,9 @@ public interface StockService {
 	String viewStocks(HttpSession session, Model model, String company);
 
 	String viewWallet(HttpSession session, Model model);
+
+	String rechargeWallet(double amount, HttpSession session, Model model) throws RazorpayException;
+
+	String paymentSuccess(double amount, HttpSession session);
 
 }

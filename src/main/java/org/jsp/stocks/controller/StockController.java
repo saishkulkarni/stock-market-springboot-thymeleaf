@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.razorpay.RazorpayException;
+
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
@@ -91,5 +93,15 @@ public class StockController {
 	@GetMapping("/wallet")
 	public String viewWallet(HttpSession session,Model model) {
 		return service.viewWallet(session,model);
+	}
+	
+	@PostMapping("/wallet/{amount}")
+	public String paymentSuccess(@PathVariable double amount,HttpSession session) {
+		return service.paymentSuccess(amount,session);
+	}
+	
+	@GetMapping("/recharge")
+	public String rechargeWallet(@RequestParam double amount,HttpSession session,Model model) throws RazorpayException {
+		return service.rechargeWallet(amount,session,model);
 	}
 }

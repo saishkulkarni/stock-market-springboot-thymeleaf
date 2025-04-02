@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
+import org.json.JSONObject;
 import org.jsp.stocks.dto.Stock;
 import org.jsp.stocks.dto.User;
 import org.jsp.stocks.repository.StockRepository;
@@ -22,6 +23,10 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.razorpay.Order;
+import com.razorpay.RazorpayClient;
+import com.razorpay.RazorpayException;
+
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -34,6 +39,11 @@ public class StockServiceImpl implements StockService {
 
 	@Autowired
 	StockRepository stockRepository;
+
+	@Value("${razor-pay.api.key}")
+	String razorpayKey;
+	@Value("${razor-pay.api.secret}")
+	String razorpaySecret;
 
 	@Value("${admin.email}")
 	String adminEmail;
@@ -284,6 +294,42 @@ public class StockServiceImpl implements StockService {
 			User user = (User) session.getAttribute("user");
 			model.addAttribute("amount", user.getAmount());
 			return "wallet.html";
+		} else {
+			session.setAttribute("fail", "Invalid Session, Login First");
+			return "redirect:/login";
+		}
+	}
+
+	@Override
+	public String rechargeWallet(double amount, HttpSession session, Model model) throws RazorpayException {
+		if (session.getAttribute("user") != null) {
+
+			RazorpayClient client = new RazorpayClient(razorpayKey, razorpaySecret);
+
+			JSONObject json = new JSONObject();
+			json.put("amount", amount * 100);
+			json.put("currency", "INR");
+
+			Order order = client.orders.create(json);
+			
+			model.addAttribute("orderId", order.get("id"));
+			model.addAttribute("key",razorpayKey);
+			model.addAttribute("orderAmount", order.get("amount"));
+			model.addAttribute("currency", order.get("currency"));
+			return "payment.html";
+		} else {
+			session.setAttribute("fail", "Invalid Session, Login First");
+			return "redirect:/login";
+		}
+	}
+
+	@Override
+	public String paymentSuccess(double amount, HttpSession session) {
+		if (session.getAttribute("user") != null) {
+			User user=(User) session.getAttribute("user");
+			user.setAmount(user.getAmount()+(amount/100));
+			userRepository.save(user);
+			return "redirect:/wallet";
 		} else {
 			session.setAttribute("fail", "Invalid Session, Login First");
 			return "redirect:/login";
