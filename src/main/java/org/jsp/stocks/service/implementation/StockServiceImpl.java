@@ -40,8 +40,12 @@ public class StockServiceImpl implements StockService {
 	@Autowired
 	StockRepository stockRepository;
 
+	@Value("${platformPercentage}")
+	double platformPercentage;
+
 	@Value("${razor-pay.api.key}")
 	String razorpayKey;
+	
 	@Value("${razor-pay.api.secret}")
 	String razorpaySecret;
 
@@ -311,9 +315,9 @@ public class StockServiceImpl implements StockService {
 			json.put("currency", "INR");
 
 			Order order = client.orders.create(json);
-			
+
 			model.addAttribute("orderId", order.get("id"));
-			model.addAttribute("key",razorpayKey);
+			model.addAttribute("key", razorpayKey);
 			model.addAttribute("orderAmount", order.get("amount"));
 			model.addAttribute("currency", order.get("currency"));
 			return "payment.html";
@@ -326,10 +330,71 @@ public class StockServiceImpl implements StockService {
 	@Override
 	public String paymentSuccess(double amount, HttpSession session) {
 		if (session.getAttribute("user") != null) {
-			User user=(User) session.getAttribute("user");
-			user.setAmount(user.getAmount()+(amount/100));
+			User user = (User) session.getAttribute("user");
+			user.setAmount(user.getAmount() + (amount / 100));
 			userRepository.save(user);
 			return "redirect:/wallet";
+		} else {
+			session.setAttribute("fail", "Invalid Session, Login First");
+			return "redirect:/login";
+		}
+	}
+
+	@Override
+	public String viewStock(HttpSession session, Model model, String ticker) {
+		if (session.getAttribute("user") != null) {
+			Optional<Stock> stock = stockRepository.findById(ticker);
+
+			if (updateStockFromAPI(stock.get()))
+				stockRepository.save(stock.get());
+			model.addAttribute("stock", stock.get());
+			return "view-stock.html";
+		} else {
+			session.setAttribute("fail", "Invalid Session, Login First");
+			return "redirect:/login";
+		}
+	}
+
+	@Override
+	public String buyStock(String ticker, double quantity, HttpSession session, Model model) {
+		if (session.getAttribute("user") != null) {
+			Stock stock = stockRepository.findById(ticker).get();
+			if (quantity <= stock.getQuantity()) {
+				double totalPrice = stock.getPrice() * quantity;
+				User user = (User) session.getAttribute("user");
+				double walletAmount = user.getAmount();
+				model.addAttribute("totalPrice", totalPrice);
+				model.addAttribute("platformPercentage", platformPercentage);
+				model.addAttribute("wallet", walletAmount);
+				model.addAttribute("ticker", ticker);
+				model.addAttribute("quantity", quantity);
+				return "confirm-buy.html";
+			} else {
+				session.setAttribute("fail", "Out of Limit");
+				return "redirect:/";
+			}
+		} else {
+			session.setAttribute("fail", "Invalid Session, Login First");
+			return "redirect:/login";
+		}
+	}
+
+	@Override
+	public String confirmPurchase(HttpSession session, String ticker, double quantity, double price) {
+		if (session.getAttribute("user") != null) {
+			User user = (User) session.getAttribute("user");
+			double walletPrice = user.getAmount();
+			Stock stock = stockRepository.findById(ticker).get();
+			double platformFee = price * platformPercentage;
+			
+			stock.setQuantity(stock.getQuantity()-quantity);
+			stockRepository.save(stock);
+			
+			user.setAmount(walletPrice-(price+platformFee));
+			userRepository.save(user);
+			
+			session.setAttribute("pass", "Stock Purchased Success");
+			return "redirect:/";
 		} else {
 			session.setAttribute("fail", "Invalid Session, Login First");
 			return "redirect:/login";

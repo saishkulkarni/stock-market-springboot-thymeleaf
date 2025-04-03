@@ -37,4 +37,10 @@ public interface StockService {
 
 	String paymentSuccess(double amount, HttpSession session);
 
+	String viewStock(HttpSession session, Model model, String ticker);
+
+	String buyStock(String ticker, double quantity, HttpSession session, Model model);
+
+	String confirmPurchase(HttpSession session, String ticker, double quantity, double price);
+
 }

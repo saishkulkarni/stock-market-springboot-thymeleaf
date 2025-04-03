@@ -104,4 +104,19 @@ public class StockController {
 	public String rechargeWallet(@RequestParam double amount,HttpSession session,Model model) throws RazorpayException {
 		return service.rechargeWallet(amount,session,model);
 	}
+	
+	@GetMapping("/buy-stock/{ticker}")
+	public String viewStock(@PathVariable String ticker,HttpSession session,Model model) {
+		return service.viewStock(session, model, ticker);
+	}
+	
+	@PostMapping("/buy-stock")
+	public String buyStock(@RequestParam String ticker,@RequestParam double quantity,HttpSession session,Model model) {
+		return service.buyStock(ticker,quantity,session,model);
+	}
+	
+	@PostMapping("/confirm-buy")
+	public String confirmPurchase(HttpSession session,@RequestParam String ticker,@RequestParam double price,@RequestParam double quantity) {
+		return service.confirmPurchase(session,ticker,quantity,price);
+	}
 }

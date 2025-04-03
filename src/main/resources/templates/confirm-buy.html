@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Confirm Buying Stock</h1>
+    
+    <h3>Amount in Wallet: <span th:text="${wallet}"></span></h3>
+    <h3>Total Stock Price: <span th:text="${totalPrice}"></span>+ Platform fee: <span th:text="${totalPrice*platformPercentage}"></span></h3>
+    <h3>If Bought Balance of wallet will be <span th:text="${wallet-(totalPrice+totalPrice*platformPercentage)}"></span></h3>
+    <form action="/confirm-buy" method="post" th:if="${wallet>totalPrice+totalPrice*platformPercentage}">
+        <input type="hidden" name="ticker" th:value="${ticker}">
+        <input type="hidden" name="quantity" th:value="${quantity}">
+        <input type="hidden" name="price" th:value="${totalPrice}">
+        <button>Buy</button>
+    </form>
+</body>
+</html>

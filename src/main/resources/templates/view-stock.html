@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title> 
+</head>
+<body>
+    <h1>Stock</h1>
+    <h3>Note:  There Might be some changs in Price and Volume check below and confirm</h3>
+    <div>
+        <table>
+            <tr>
+                <th>Ticker: </th>
+                <td th:text="${stock.ticker}"></td>
+            </tr>
+            
+            <tr>
+                <th>Compnay Name: </th>
+                <td th:text="${stock.companyName}"></td>
+            </tr>
+            
+            <tr>
+                <th>Price: </th>
+                <td th:text="${stock.price}"></td>
+            </tr>
+            <tr>
+                <th>Volume: </th>
+                <td th:text="${stock.quantity}"></td>
+            </tr>
+            <tr>
+                <th>Change Percentage: </th>
+                <td th:text="${stock.changes}"></td>
+            </tr>
+        </table>
+
+        <form action="/buy-stock" method="post">
+            <input type="text" name="quantity" placeholder="Enter Quantity">
+            <input type="hidden" name="ticker" th:value="${stock.ticker}">
+            <input type="submit" value="Buy">
+        </form>
+    </div>
+</body>
+</html>
