@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Total Transaction Amount : <span th:text="${data.totalTransaction}"></span> </h1>
+    <h1>Platform Fee Percentage : <span th:text="${data.platformFeePercentage*100}+'%'"></span> </h1>
+    <h1>Total Platform Fee Collected : <span th:text="${data.totalPlatformFee}"></span> </h1>
+    <h1>Total Stocks Bought by Users: <span th:text="${data.totalStocksBought}"></span></h1>
+    <h1>Total Stocks Sold by Users: <span th:text="${data.totalStocksSold}"></span></h1>
+</body>
+</html>

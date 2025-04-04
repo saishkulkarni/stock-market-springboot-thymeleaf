@@ -71,52 +71,60 @@ public class StockController {
 	}
 
 	@PostMapping("/add-stock")
-	public String addStock(HttpSession session,Stock stock) {
-		return service.addStock(session,stock);
+	public String addStock(HttpSession session, Stock stock) {
+		return service.addStock(session, stock);
 	}
-	
+
 	@GetMapping("/manage-stocks")
-	public String manageStocks(HttpSession session,Model model) {
-		return service.fetchStocks(session,model);
+	public String manageStocks(HttpSession session, Model model) {
+		return service.fetchStocks(session, model);
 	}
-	
+
 	@GetMapping("/delete-stock/{ticker}")
-	public String deleteStock(@PathVariable String ticker,HttpSession session) {
-		return service.deleteStock(ticker,session);
+	public String deleteStock(@PathVariable String ticker, HttpSession session) {
+		return service.deleteStock(ticker, session);
 	}
-	
+
 	@GetMapping("/view-stocks")
-	public String viewStocks(HttpSession session,Model model,@RequestParam(required = false) String company) {
-		return service.viewStocks(session,model,company);
+	public String viewStocks(HttpSession session, Model model, @RequestParam(required = false) String company) {
+		return service.viewStocks(session, model, company);
 	}
-	
+
 	@GetMapping("/wallet")
-	public String viewWallet(HttpSession session,Model model) {
-		return service.viewWallet(session,model);
+	public String viewWallet(HttpSession session, Model model) {
+		return service.viewWallet(session, model);
 	}
-	
+
 	@PostMapping("/wallet/{amount}")
-	public String paymentSuccess(@PathVariable double amount,HttpSession session) {
-		return service.paymentSuccess(amount,session);
+	public String paymentSuccess(@PathVariable double amount, HttpSession session) {
+		return service.paymentSuccess(amount, session);
 	}
-	
+
 	@GetMapping("/recharge")
-	public String rechargeWallet(@RequestParam double amount,HttpSession session,Model model) throws RazorpayException {
-		return service.rechargeWallet(amount,session,model);
+	public String rechargeWallet(@RequestParam double amount, HttpSession session, Model model)
+			throws RazorpayException {
+		return service.rechargeWallet(amount, session, model);
 	}
-	
+
 	@GetMapping("/buy-stock/{ticker}")
-	public String viewStock(@PathVariable String ticker,HttpSession session,Model model) {
+	public String viewStock(@PathVariable String ticker, HttpSession session, Model model) {
 		return service.viewStock(session, model, ticker);
 	}
-	
+
 	@PostMapping("/buy-stock")
-	public String buyStock(@RequestParam String ticker,@RequestParam double quantity,HttpSession session,Model model) {
-		return service.buyStock(ticker,quantity,session,model);
+	public String buyStock(@RequestParam String ticker, @RequestParam double quantity, HttpSession session,
+			Model model) {
+		return service.buyStock(ticker, quantity, session, model);
 	}
-	
+
 	@PostMapping("/confirm-buy")
-	public String confirmPurchase(HttpSession session,@RequestParam String ticker,@RequestParam double price,@RequestParam double quantity) {
-		return service.confirmPurchase(session,ticker,quantity,price);
+	public String confirmPurchase(HttpSession session, @RequestParam String ticker, @RequestParam double price,
+			@RequestParam double quantity) {
+		return service.confirmPurchase(session, ticker, quantity, price);
+	}
+
+	@GetMapping("/overview")
+	public String overView(HttpSession session, Model model) {
+		return service.viewOverview(session, model);
 	}
 }

@@ -43,4 +43,6 @@ public interface StockService {
 
 	String confirmPurchase(HttpSession session, String ticker, double quantity, double price);
 
+	String viewOverview(HttpSession session, Model model);
+
 }
