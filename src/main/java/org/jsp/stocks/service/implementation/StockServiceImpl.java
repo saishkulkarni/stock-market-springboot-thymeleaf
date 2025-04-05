@@ -408,7 +408,7 @@ public class StockServiceImpl implements StockService {
 			stock.setQuantity(stock.getQuantity() - quantity);
 			stockRepository.save(stock);
 
-			user.setAmount(walletPrice - (price + platformFee));
+			user.setAmount(Double.parseDouble(format.format(walletPrice - (price + platformFee))));
 			userRepository.save(user);
 			Optional<AdminData> opData = dataRepository.findById(1);
 			AdminData data;
