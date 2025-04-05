@@ -127,4 +127,10 @@ public class StockController {
 	public String overView(HttpSession session, Model model) {
 		return service.viewOverview(session, model);
 	}
+	
+	@GetMapping("/portfolio")
+	public String viewPortfolio(HttpSession session,Model model) {
+		return service.viewPortfolio(session,model);
+	}
+	
 }

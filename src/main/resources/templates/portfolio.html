@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div align="center">
+        <h1>Portfolio</h1>
+        <h3>Total Invested: <span th:text="${totalInvested}"></span></h3>
+        <h3>Current Value: <span th:text="${currentValue}"></span></h3>
+        <h3>Gain/Loss <span th:text="${currentValue-totalInvested}"></span></h3>
+        <table border="1">
+            <tr>
+                <th>Ticker</th>
+                <th>Company Name</th>
+                <th>Quantity</th>
+                <th>Price when Bought</th>
+                <th>Current Price</th>
+                <th>Gain/Loss</th>
+                <th>Sell</th>
+            </tr>
+            <tr th:each="transaction : ${transactions}">
+                <td th:text="${transaction.stock_ticker}"></td>
+                <td th:text="${@stockRepository.findById(transaction.stock_ticker).get().getCompanyName()}"></td>
+                <th th:text="${transaction.quantity}"></th>
+                <th th:text="${transaction.price/transaction.quantity}"></th>
+                <th th:text="${@stockRepository.findById(transaction.stock_ticker).get().getPrice()}"></th>
+                <th th:text="${@stockRepository.findById(transaction.stock_ticker).get().getPrice()-transaction.price/transaction.quantity}"></th>
+                <th><button>Sell</button></th>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

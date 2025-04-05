@@ -1,5 +1,6 @@
 package org.jsp.stocks.service.implementation;
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,8 @@ import jakarta.servlet.http.HttpSession;
 
 @Service
 public class StockServiceImpl implements StockService {
+	
+	DecimalFormat format=new DecimalFormat("#0.00");
 
 	@Autowired
 	RestTemplate restTemplate;
@@ -232,13 +235,16 @@ public class StockServiceImpl implements StockService {
 				+ stockapikey;
 		Map<String, Object> response = restTemplate.getForObject(url, Map.class);
 		Map<String, Object> quote = (Map<String, Object>) response.get("Global Quote");
+		if(quote==null){
+			return false;
+		}
 		if (!quote.isEmpty()) {
 			if (stock.getTicker().contains(".BSE"))
-				stock.setPrice(Double.parseDouble(quote.get("05. price").toString()));
+				stock.setPrice(Double.parseDouble(format.format(quote.get("05. price").toString())));
 			else
-				stock.setPrice(Double.parseDouble(quote.get("05. price").toString()) * 85.55);
+				stock.setPrice(Double.parseDouble(format.format(quote.get("05. price").toString())) * 85.55);
 			stock.setQuantity(Double.parseDouble(quote.get("06. volume").toString()));
-			stock.setChanges(Double.parseDouble(quote.get("10. change percent").toString().replace("%", "")));
+			stock.setChanges(Double.parseDouble(format.format(quote.get("10. change percent").toString()).replace("%", "")));
 
 			String nameFetchEndpoint = "https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords="
 					+ stock.getTicker() + "&apikey=" + stockapikey;
@@ -435,7 +441,7 @@ public class StockServiceImpl implements StockService {
 				transaction.setPrice(price);
 				transaction.setQuantity(quantity);
 				transactions.add(transaction);
-				
+
 			}
 			session.setAttribute("user", userRepository.save(user));
 			session.setAttribute("pass", "Stock Purchased Success");
@@ -461,5 +467,34 @@ public class StockServiceImpl implements StockService {
 			session.setAttribute("fail", "Invalid Session, Login First");
 			return "redirect:/login";
 		}
+	}
+
+	@Override
+	public String viewPortfolio(HttpSession session, Model model) {
+		if (session.getAttribute("user") != null) {
+			User user = (User) session.getAttribute("user");
+			List<UserStocksTransaction> transactions = user.getTransactions();
+			if (transactions.isEmpty()) {
+				session.setAttribute("fail", "No Data to display in Portfolio");
+				return "redirect:/";
+			} else {
+				double totalInvested = transactions.stream().mapToDouble(UserStocksTransaction::getPrice).sum();
+				double currentValue = 0;
+				for (UserStocksTransaction transaction : transactions) {
+					Stock stock = stockRepository.findById(transaction.getStock_ticker()).get();
+					updateStockFromAPI(stock);
+					stockRepository.save(stock);
+					currentValue += (stock.getPrice() * transaction.getQuantity());
+				}
+				model.addAttribute("totalInvested", totalInvested);
+				model.addAttribute("currentValue", currentValue);
+				model.addAttribute("transactions", transactions);
+				return "portfolio.html";
+			}
+		} else {
+			session.setAttribute("fail", "Invalid Session, Login First");
+			return "redirect:/login";
+		}
+
 	}
 }

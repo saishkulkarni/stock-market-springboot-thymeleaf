@@ -45,4 +45,6 @@ public interface StockService {
 
 	String viewOverview(HttpSession session, Model model);
 
+	String viewPortfolio(HttpSession session, Model model);
+
 }
