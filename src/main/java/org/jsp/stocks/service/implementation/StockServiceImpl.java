@@ -369,6 +369,7 @@ public class StockServiceImpl implements StockService {
 
 			if (updateStockFromAPI(stock.get()))
 				stockRepository.save(stock.get());
+			
 			model.addAttribute("stock", stock.get());
 			return "view-stock.html";
 		} else {
@@ -528,18 +529,21 @@ public class StockServiceImpl implements StockService {
 					} else {
 						if (transaction.getQuantity() > quantity) {
 							transaction.setQuantity(transaction.getQuantity() - quantity);
-							transaction.setPrice(transaction.getPrice()-(quantity*(transaction.getPrice()/transaction.getQuantity())));
+							transaction.setPrice(transaction.getPrice()
+									- (quantity * (transaction.getPrice() / transaction.getQuantity())));
 							transactionRepository.save(transaction);
-						}else {
+							user.setAmount(user.getAmount() + (stock.getPrice() * quantity));
+							userRepository.save(user);
+						} else {
 							transactions.remove(transaction);
+							user.setAmount(user.getAmount() + (stock.getPrice() * quantity));
 							userRepository.save(user);
 							transactionRepository.deleteById(transaction.getId());
 						}
-		
+
 						stock.setQuantity(stock.getQuantity() + quantity);
-						user.setAmount(user.getAmount() + (stock.getPrice() * quantity));
 						stockRepository.save(stock);
-						userRepository.save(user);
+						session.setAttribute("user", user);
 						session.setAttribute("pass", "Stock Sold Success");
 						return "redirect:/portfolio";
 					}
