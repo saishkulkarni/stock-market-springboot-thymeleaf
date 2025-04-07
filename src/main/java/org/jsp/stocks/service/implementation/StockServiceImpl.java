@@ -38,8 +38,8 @@ import jakarta.servlet.http.HttpSession;
 
 @Service
 public class StockServiceImpl implements StockService {
-	
-	DecimalFormat format=new DecimalFormat("#0.00");
+
+	DecimalFormat format = new DecimalFormat("#0.00");
 
 	@Autowired
 	RestTemplate restTemplate;
@@ -235,16 +235,16 @@ public class StockServiceImpl implements StockService {
 				+ stockapikey;
 		Map<String, Object> response = restTemplate.getForObject(url, Map.class);
 		Map<String, Object> quote = (Map<String, Object>) response.get("Global Quote");
-		if(quote==null){
+		if (quote == null) {
 			return false;
 		}
 		if (!quote.isEmpty()) {
 			if (stock.getTicker().contains(".BSE"))
-				stock.setPrice(Double.parseDouble(format.format(quote.get("05. price").toString())));
+				stock.setPrice(formatNumber(quote.get("05. price").toString()));
 			else
-				stock.setPrice(Double.parseDouble(format.format(quote.get("05. price").toString())) * 85.55);
+				stock.setPrice(formatNumber(quote.get("05. price").toString()) * 85.55);
 			stock.setQuantity(Double.parseDouble(quote.get("06. volume").toString()));
-			stock.setChanges(Double.parseDouble(format.format(quote.get("10. change percent").toString()).replace("%", "")));
+			stock.setChanges(formatNumber(quote.get("10. change percent").toString().replace("%", "")));
 
 			String nameFetchEndpoint = "https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords="
 					+ stock.getTicker() + "&apikey=" + stockapikey;
@@ -286,6 +286,10 @@ public class StockServiceImpl implements StockService {
 			session.setAttribute("fail", "Invalid Session, Login First");
 			return "redirect:/login";
 		}
+	}
+
+	public Double formatNumber(String number) {
+		return Double.parseDouble(format.format(Double.parseDouble(number)));
 	}
 
 	@Override
@@ -496,5 +500,56 @@ public class StockServiceImpl implements StockService {
 			return "redirect:/login";
 		}
 
+	}
+
+	@Override
+	public String viewSell(String ticker, HttpSession session, Model model) {
+		if (session.getAttribute("user") != null) {
+			Stock stock = stockRepository.findById(ticker).get();
+			model.addAttribute("stock", stock);
+			return "enter-quantity.html";
+		} else {
+			session.setAttribute("fail", "Invalid Session, Login First");
+			return "redirect:/login";
+		}
+	}
+
+	@Override
+	public String sellStocks(double quantity, String ticker, HttpSession session) {
+		if (session.getAttribute("user") != null) {
+			User user = (User) session.getAttribute("user");
+			Stock stock = stockRepository.findById(ticker).get();
+			List<UserStocksTransaction> transactions = user.getTransactions();
+			for (UserStocksTransaction transaction : transactions) {
+				if (transaction.getStock_ticker().equals(ticker)) {
+					if (quantity > transaction.getQuantity()) {
+						session.setAttribute("fail", "You dont have enough quantity");
+						return "redirect:/portfolio";
+					} else {
+						if (transaction.getQuantity() > quantity) {
+							transaction.setQuantity(transaction.getQuantity() - quantity);
+							transaction.setPrice(transaction.getPrice()-(quantity*(transaction.getPrice()/transaction.getQuantity())));
+							transactionRepository.save(transaction);
+						}else {
+							transactions.remove(transaction);
+							userRepository.save(user);
+							transactionRepository.deleteById(transaction.getId());
+						}
+		
+						stock.setQuantity(stock.getQuantity() + quantity);
+						user.setAmount(user.getAmount() + (stock.getPrice() * quantity));
+						stockRepository.save(stock);
+						userRepository.save(user);
+						session.setAttribute("pass", "Stock Sold Success");
+						return "redirect:/portfolio";
+					}
+				}
+			}
+			session.setAttribute("fail", "Something wrong with Stocks, Try after Sometime");
+			return "redirect:/";
+		} else {
+			session.setAttribute("fail", "Invalid Session, Login First");
+			return "redirect:/login";
+		}
 	}
 }

@@ -7,6 +7,12 @@
 </head>
 <body>
     <div align="center">
+        <div class="container">
+            <div class="notification" th:if="${session.pass != null || session.fail != null}">
+                <h3 class="success-message" th:if="${session.pass != null}" th:text="${session.pass}"></h3>
+                <h3 class="error-message" th:if="${session.fail != null}" th:text="${session.fail}"></h3>
+                <span th:text="${@stockServiceImpl.removeMessage()}"></span>
+            </div>
         <h1>Portfolio</h1>
         <h3>Total Invested: <span th:text="${totalInvested}"></span></h3>
         <h3>Current Value: <span th:text="${currentValue}"></span></h3>
@@ -28,7 +34,7 @@
                 <th th:text="${transaction.price/transaction.quantity}"></th>
                 <th th:text="${@stockRepository.findById(transaction.stock_ticker).get().getPrice()}"></th>
                 <th th:text="${@stockRepository.findById(transaction.stock_ticker).get().getPrice()-transaction.price/transaction.quantity}"></th>
-                <th><button>Sell</button></th>
+                <th><a th:href="'/sell/'+${transaction.stock_ticker}"><button>Sell</button></a></th>
             </tr>
         </table>
     </div>

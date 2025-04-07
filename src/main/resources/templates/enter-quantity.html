@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div align="center">
+    <h1>The Current price of <span th:text="${stock.ticker}"></span> is <span th:text="${stock.price}"></span> </h1>
+
+    <form action="/sell" method="post">
+        Enter Quantity: <input type="number" name="quantity" id="quantity">
+        <input type="hidden" name="ticker" th:value="${stock.ticker}">
+        <input type="submit" value="Sell">
+    </form>
+</div>
+</body>
+</html>

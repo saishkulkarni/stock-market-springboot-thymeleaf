@@ -133,4 +133,13 @@ public class StockController {
 		return service.viewPortfolio(session,model);
 	}
 	
+	@GetMapping("/sell/{ticker}")
+	public String viewSell(@PathVariable String ticker,HttpSession session,Model model) {
+		return service.viewSell(ticker,session,model);
+	}
+	
+	@PostMapping("/sell")
+	public String sellShares(@RequestParam double quantity,@RequestParam String ticker,HttpSession session) {
+		return service.sellStocks(quantity,ticker,session);
+	}
 }
