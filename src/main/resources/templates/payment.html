@@ -3,38 +3,361 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta name="description" content="StockMarket - Complete your payment">
+    <title>StockMarket - Payment</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #2e7d32;
+            --primary-dark: #005005;
+            --primary-light: #60ad5e;
+            --secondary-color: #1565c0;
+            --secondary-dark: #003c8f;
+            --secondary-light: #5e92f3;
+            --accent-color: #f57c00;
+            --accent-dark: #bb4d00;
+            --accent-light: #ffad42;
+            --danger-color: #c62828;
+            --danger-dark: #8e0000;
+            --danger-light: #ff5f52;
+            --success-color: #2e7d32;
+            --warning-color: #f9a825;
+            --info-color: #0277bd;
+            --light-color: #f5f5f5;
+            --dark-color: #212121;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-400: #ced4da;
+            --gray-500: #adb5bd;
+            --gray-600: #6c757d;
+            --gray-700: #495057;
+            --gray-800: #343a40;
+            --gray-900: #212529;
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        html, body {
+            height: 100%;
+        }
+        
+        body {
+            background-color: var(--gray-100);
+            color: var(--gray-800);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Navbar Styles */
+        .navbar {
+            background-color: white;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 15px 0;
+            transition: var(--transition);
+        }
+        
+        .navbar.scrolled {
+            padding: 10px 0;
+        }
+        
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--dark-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            color: var(--primary-color);
+            margin-right: 10px;
+            font-size: 28px;
+        }
+        
+        .logo span {
+            color: var(--accent-color);
+        }
+        
+        /* Main Content */
+        .main-content-wrapper {
+            flex: 1 0 auto;
+            padding: 40px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .main-content {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .page-title {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .page-title i {
+            color: var(--accent-color);
+        }
+        
+        .payment-info {
+            background-color: var(--gray-100);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            text-align: left;
+        }
+        
+        .payment-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--gray-300);
+        }
+        
+        .payment-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+            margin-bottom: 0;
+        }
+        
+        .payment-label {
+            font-weight: 500;
+            color: var(--gray-700);
+        }
+        
+        .payment-value {
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+        
+        .payment-amount {
+            color: var(--primary-color);
+            font-size: 18px;
+            font-weight: 700;
+        }
+        
+        .payment-image {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+        
+        /* Button Styles */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+            font-size: 16px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+        }
+        
+        .btn i {
+            font-size: 18px;
+        }
+        
+        .btn-primary {
+            background-color: #F7374F;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #d92c41;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: white;
+            margin-top: 15px;
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--secondary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--gray-800);
+            color: var(--gray-300);
+            padding: 20px 0;
+            flex-shrink: 0;
+            text-align: center;
+        }
+        
+        .footer-bottom {
+            padding-top: 5px;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 20px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .main-content-wrapper {
+                padding: 20px 0;
+            }
+            
+            .page-title {
+                font-size: 24px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <button id="rzp-button1">Pay with Razorpay</button>
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-<script th:inline="javascript">
-var options = {
-    "key": [[${key}]],
-    "amount": [[${orderAmount}]],
-    "currency": [[${currency}]],
-    "name": "Stock Market App",
-    "description": "Recharge Wallet",
-    "image": "https://img.etimg.com/thumb/width-1200,height-900,imgsize-58262,resizemode-75,msid-118580149/markets/stocks/news/ahead-of-market-10-things-that-will-decide-stock-market-action-on-thursday.jpg",
-    "order_id": [[${orderId}]],
-    "callback_url": "/wallet/[[${orderAmount}]]",
-    "prefill": {
-        "name": [[${session.user.name}]],
-        "email": [[${session.user.email}]],
-        "contact": [[${session.user.mobile}]]
-    },
-    "notes": {
-        "address": "Razorpay Corporate Office"
-    },
-    "theme": {
-        "color": "#F7374F"
-    }
-};
-var rzp1 = new Razorpay(options);
-document.getElementById('rzp-button1').onclick = function(e){
-    rzp1.open();
-    e.preventDefault();
-}
-</script>
+    <nav class="navbar" id="navbar">
+        <div class="container navbar-container">
+            <a href="/" class="logo">
+                <i class="fas fa-chart-line"></i>
+                Stock<span>Market</span>
+            </a>
+        </div>
+    </nav>
+    
+    <div class="main-content-wrapper">
+        <div class="container">
+            <div class="main-content">
+                <h2 class="page-title">
+                    <i class="fas fa-credit-card"></i> Complete Payment
+                </h2>
+                
+                <div class="payment-info">
+                    <div class="payment-item">
+                        <span class="payment-label">Amount:</span>
+                        <span class="payment-value payment-amount" th:text="'₹' + ${orderAmount/100}"></span>
+                    </div>
+                    <div class="payment-item">
+                        <span class="payment-label">Currency:</span>
+                        <span class="payment-value" th:text="${currency}"></span>
+                    </div>
+                    <div class="payment-item">
+                        <span class="payment-label">Order ID:</span>
+                        <span class="payment-value" th:text="${orderId}"></span>
+                    </div>
+                </div>
+                
+                <img src="https://img.etimg.com/thumb/width-1200,height-900,imgsize-58262,resizemode-75,msid-118580149/markets/stocks/news/ahead-of-market-10-things-that-will-decide-stock-market-action-on-thursday.jpg" alt="Stock Market" class="payment-image">
+                
+                <button id="rzp-button1" class="btn btn-primary">
+                    <i class="fas fa-lock"></i> Pay with Razorpay
+                </button>
+                
+                <a href="/wallet" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Wallet
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">            
+            <div class="footer-bottom">
+                <p>&copy; 2025 StockMarket. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script th:inline="javascript">
+        var options = {
+            "key": [[${key}]],
+            "amount": [[${orderAmount}]],
+            "currency": [[${currency}]],
+            "name": "Stock Market App",
+            "description": "Recharge Wallet",
+            "image": "https://img.etimg.com/thumb/width-1200,height-900,imgsize-58262,resizemode-75,msid-118580149/markets/stocks/news/ahead-of-market-10-things-that-will-decide-stock-market-action-on-thursday.jpg",
+            "order_id": [[${orderId}]],
+            "callback_url": "/wallet/[[${orderAmount}]]",
+            "prefill": {
+                "name": [[${session.user.name}]],
+                "email": [[${session.user.email}]],
+                "contact": [[${session.user.mobile}]]
+            },
+            "notes": {
+                "address": "Razorpay Corporate Office"
+            },
+            "theme": {
+                "color": "#F7374F"
+            }
+        };
+        
+        var rzp1 = new Razorpay(options);
+        document.getElementById('rzp-button1').onclick = function(e){
+            rzp1.open();
+            e.preventDefault();
+        }
+        
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+    </script>
 </body>
 </html>

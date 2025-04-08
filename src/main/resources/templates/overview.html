@@ -3,13 +3,446 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta name="description" content="StockMarket - Admin Overview Dashboard">
+    <title>StockMarket - Admin Overview</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #2e7d32;
+            --primary-dark: #005005;
+            --primary-light: #60ad5e;
+            --secondary-color: #1565c0;
+            --secondary-dark: #003c8f;
+            --secondary-light: #5e92f3;
+            --accent-color: #f57c00;
+            --accent-dark: #bb4d00;
+            --accent-light: #ffad42;
+            --danger-color: #c62828;
+            --danger-dark: #8e0000;
+            --danger-light: #ff5f52;
+            --success-color: #2e7d32;
+            --warning-color: #f9a825;
+            --info-color: #0277bd;
+            --light-color: #f5f5f5;
+            --dark-color: #212121;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-400: #ced4da;
+            --gray-500: #adb5bd;
+            --gray-600: #6c757d;
+            --gray-700: #495057;
+            --gray-800: #343a40;
+            --gray-900: #212529;
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        html, body {
+            height: 100%;
+        }
+        
+        body {
+            background-color: var(--gray-100);
+            color: var(--gray-800);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Navbar Styles */
+        .navbar {
+            background-color: white;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 15px 0;
+            transition: var(--transition);
+        }
+        
+        .navbar.scrolled {
+            padding: 10px 0;
+        }
+        
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--dark-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            color: var(--primary-color);
+            margin-right: 10px;
+            font-size: 28px;
+        }
+        
+        .logo span {
+            color: var(--accent-color);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-link {
+            color: var(--gray-700);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 8px 12px;
+            border-radius: 4px;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary-color);
+            background-color: var(--gray-100);
+        }
+        
+        .nav-link.active {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--gray-700);
+            cursor: pointer;
+        }
+        
+        /* Main Content */
+        .main-content-wrapper {
+            flex: 1 0 auto;
+            padding: 40px 0;
+        }
+        
+        .main-content {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+        }
+        
+        .page-title {
+            font-size: 28px;
+            margin-bottom: 30px;
+            color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .page-title i {
+            color: var(--accent-color);
+        }
+        
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background-color: var(--gray-100);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+        }
+        
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, transparent 50%, rgba(0, 0, 0, 0.03) 50%);
+            border-radius: 0 0 10px 0;
+        }
+        
+        .stat-icon {
+            font-size: 36px;
+            margin-bottom: 15px;
+            color: var(--secondary-color);
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--gray-900);
+        }
+        
+        .stat-label {
+            font-size: 16px;
+            color: var(--gray-600);
+            font-weight: 500;
+        }
+        
+        .stat-card.primary .stat-icon {
+            color: var(--primary-color);
+        }
+        
+        .stat-card.secondary .stat-icon {
+            color: var(--secondary-color);
+        }
+        
+        .stat-card.accent .stat-icon {
+            color: var(--accent-color);
+        }
+        
+        .stat-card.info .stat-icon {
+            color: var(--info-color);
+        }
+        
+        .stat-card.warning .stat-icon {
+            color: var(--warning-color);
+        }
+        
+        /* Button Styles */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+            font-size: 16px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn i {
+            font-size: 18px;
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--secondary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--gray-800);
+            color: var(--gray-300);
+            padding: 20px 0;
+            flex-shrink: 0;
+            text-align: center;
+        }
+        
+        .footer-bottom {
+            padding-top: 5px;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background-color: white;
+                flex-direction: column;
+                padding: 20px;
+                box-shadow: var(--shadow);
+                z-index: 1000;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .stat-value {
+                font-size: 24px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .main-content-wrapper {
+                padding: 20px 0;
+            }
+            
+            .page-title {
+                font-size: 24px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Total Transaction Amount : <span th:text="${data.totalTransaction}"></span> </h1>
-    <h1>Platform Fee Percentage : <span th:text="${data.platformFeePercentage*100}+'%'"></span> </h1>
-    <h1>Total Platform Fee Collected : <span th:text="${data.totalPlatformFee}"></span> </h1>
-    <h1>Total Stocks Bought by Users: <span th:text="${data.totalStocksBought}"></span></h1>
-    <h1>Total Stocks Sold by Users: <span th:text="${data.totalStocksSold}"></span></h1>
+    <nav class="navbar" id="navbar">
+        <div class="container navbar-container">
+            <a href="/" class="logo">
+                <i class="fas fa-chart-line"></i>
+                Stock<span>Market</span>
+            </a>
+            
+            <button class="mobile-menu-btn" id="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="nav-links" id="nav-links">
+                <a href="/logout" class="nav-link">Logout</a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="main-content-wrapper">
+        <div class="container">
+            <div class="main-content">
+                <h2 class="page-title">
+                    <i class="fas fa-chart-pie"></i> Platform Overview
+                </h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card primary">
+                        <div class="stat-icon">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                        <div class="stat-value" th:text="'₹' + ${data.totalTransaction}"></div>
+                        <div class="stat-label">Total Transaction Amount</div>
+                    </div>
+                    
+                    <div class="stat-card secondary">
+                        <div class="stat-icon">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <div class="stat-value" th:text="${data.platformFeePercentage*100} + '%'"></div>
+                        <div class="stat-label">Platform Fee Percentage</div>
+                    </div>
+                    
+                    <div class="stat-card accent">
+                        <div class="stat-icon">
+                            <i class="fas fa-hand-holding-usd"></i>
+                        </div>
+                        <div class="stat-value" th:text="'₹' + ${data.totalPlatformFee}"></div>
+                        <div class="stat-label">Total Platform Fee Collected</div>
+                    </div>
+                    
+                    <div class="stat-card info">
+                        <div class="stat-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="stat-value" th:text="${data.totalStocksBought}"></div>
+                        <div class="stat-label">Total Stocks Bought by Users</div>
+                    </div>
+                    
+                    <div class="stat-card warning">
+                        <div class="stat-icon">
+                            <i class="fas fa-tags"></i>
+                        </div>
+                        <div class="stat-value" th:text="${data.totalStocksSold}"></div>
+                        <div class="stat-label">Total Stocks Sold by Users</div>
+                    </div>
+                </div>
+                
+                <a href="/" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">            
+            <div class="footer-bottom">
+                <p>&copy; 2025 StockMarket. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+        
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const navLinks = document.getElementById('nav-links');
+        
+        mobileMenuBtn.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+            
+            // Change icon based on menu state
+            const icon = mobileMenuBtn.querySelector('i');
+            if (navLinks.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+    </script>
 </body>
 </html>

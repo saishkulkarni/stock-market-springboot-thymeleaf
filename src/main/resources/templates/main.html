@@ -1,250 +1,621 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="StockMarket - Your trusted platform for stock trading and investment"
+    />
     <title>StockMarket - Home</title>
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
     <style>
-        :root {
-            --primary-color: #2e7d32;
-            --secondary-color: #1565c0;
-            --accent-color: #f57c00;
-            --danger-color: #c62828;
-            --light-color: #f5f5f5;
-            --dark-color: #212121;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      :root {
+        --primary-color: #2e7d32;
+        --primary-dark: #005005;
+        --secondary-color: #1565c0;
+        --secondary-dark: #003c8f;
+        --accent-color: #f57c00;
+        --accent-dark: #bb4d00;
+        --danger-color: #c62828;
+        --success-color: #2e7d32;
+        --light-color: #f5f5f5;
+        --dark-color: #212121;
+        --gray-100: #f8f9fa;
+        --gray-300: #dee2e6;
+        --gray-600: #6c757d;
+        --gray-700: #495057;
+        --gray-800: #343a40;
+        --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+        --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        --transition: all 0.3s ease;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        background-color: var(--gray-100);
+        color: var(--gray-800);
+        line-height: 1.6;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      /* Navbar Styles */
+      .navbar {
+        background-color: white;
+        box-shadow: var(--shadow);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        padding: 15px 0;
+        transition: var(--transition);
+      }
+
+      .navbar.scrolled {
+        padding: 10px 0;
+      }
+
+      .navbar-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--dark-color);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+      }
+
+      .logo i {
+        color: var(--primary-color);
+        margin-right: 10px;
+        font-size: 28px;
+      }
+
+      .logo span {
+        color: var(--accent-color);
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 20px;
+      }
+
+      .nav-link {
+        color: var(--gray-700);
+        text-decoration: none;
+        font-weight: 500;
+        transition: var(--transition);
+        padding: 8px 12px;
+        border-radius: 4px;
+      }
+
+      .nav-link:hover {
+        color: var(--primary-color);
+        background-color: var(--gray-100);
+      }
+
+      .nav-link.active {
+        color: var(--primary-color);
+        font-weight: 600;
+      }
+
+      .mobile-menu-btn {
+        display: none;
+        background: none;
+        border: none;
+        font-size: 24px;
+        color: var(--gray-700);
+        cursor: pointer;
+      }
+
+      /* Notification Styles */
+      .notification-container {
+        position: fixed;
+        top: 80px;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        display: flex;
+        justify-content: center;
+        pointer-events: none;
+      }
+
+      .notification {
+        background-color: white;
+        border-radius: 8px;
+        padding: 15px 20px;
+        box-shadow: var(--shadow);
+        position: relative;
+        border-left: 4px solid var(--primary-color);
+        max-width: 600px;
+        width: 90%;
+        pointer-events: auto;
+        transition: opacity 0.5s ease, transform 0.5s ease;
+      }
+
+      .success-message {
+        color: var(--success-color);
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+      }
+
+      .success-message::before {
+        content: "\f058";
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        margin-right: 10px;
+        font-size: 18px;
+      }
+
+      .error-message {
+        color: var(--danger-color);
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+      }
+
+      .error-message::before {
+        content: "\f057";
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        margin-right: 10px;
+        font-size: 18px;
+      }
+
+      /* Main Content */
+      .main-content-wrapper {
+        flex: 1 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 0;
+      }
+
+      .main-content {
+        background-color: white;
+        border-radius: 12px;
+        padding: 40px;
+        box-shadow: var(--shadow);
+        width: 100%;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      .welcome-text {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .welcome-text h1 {
+        font-size: 32px;
+        margin-bottom: 15px;
+        color: var(--secondary-color);
+      }
+
+      .welcome-text p {
+        font-size: 18px;
+        color: var(--gray-600);
+        max-width: 700px;
+        margin: 0 auto;
+      }
+
+      /* Feature Cards */
+      .features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 25px;
+        margin: 30px 0;
+      }
+
+      .feature-card {
+        background-color: var(--gray-100);
+        border-radius: 8px;
+        padding: 25px;
+        box-shadow: var(--shadow-sm);
+        transition: var(--transition);
+      }
+
+      .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow);
+      }
+
+      .feature-icon {
+        font-size: 36px;
+        color: var(--primary-color);
+        margin-bottom: 15px;
+      }
+
+      .feature-title {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: var(--gray-800);
+      }
+
+      .feature-description {
+        color: var(--gray-600);
+        font-size: 15px;
+      }
+
+      /* Button Styles */
+      .btn-container {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 25px;
+      }
+
+      .btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        box-shadow: var(--shadow-sm);
+        font-size: 16px;
+        min-width: 150px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      .btn i {
+        font-size: 18px;
+      }
+
+      .btn-primary {
+        background-color: var(--primary-color);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background-color: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+      }
+
+      .btn-secondary {
+        background-color: var(--secondary-color);
+        color: white;
+      }
+
+      .btn-secondary:hover {
+        background-color: var(--secondary-dark);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+      }
+
+      .btn-accent {
+        background-color: var(--accent-color);
+        color: white;
+      }
+
+      .btn-accent:hover {
+        background-color: var(--accent-dark);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+      }
+
+      .btn-danger {
+        background-color: var(--danger-color);
+        color: white;
+      }
+
+      .btn-danger:hover {
+        background-color: #b71c1c;
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+      }
+
+      .btn-outline {
+        background-color: transparent;
+        border: 2px solid var(--primary-color);
+        color: var(--primary-color);
+      }
+
+      .btn-outline:hover {
+        background-color: var(--primary-color);
+        color: white;
+        transform: translateY(-2px);
+      }
+
+      /* Footer */
+      footer {
+        background-color: var(--gray-800);
+        color: var(--gray-300);
+        padding: 20px 0;
+        flex-shrink: 0;
+        text-align: center;
+      }
+
+      .footer-bottom {
+        padding-top: 5px;
+      }
+
+      /* Responsive Styles */
+      @media (max-width: 768px) {
+        .nav-links {
+          display: none;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          background-color: white;
+          flex-direction: column;
+          padding: 20px;
+          box-shadow: var(--shadow);
+          z-index: 1000;
         }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+        .nav-links.active {
+          display: flex;
         }
-        
-        body {
-            background-color: #f9f9f9;
-            color: var(--dark-color);
-            line-height: 1.6;
+
+        .mobile-menu-btn {
+          display: block;
         }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 20px 0;
-            box-shadow: var(--shadow);
-            margin-bottom: 30px;
-        }
-        
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .logo {
-            font-size: 28px;
-            font-weight: bold;
-        }
-        
-        .logo span {
-            color: var(--accent-color);
-        }
-        
-        .notification {
-            background-color: white;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 25px;
-            box-shadow: var(--shadow);
-        }
-        
-        .success-message {
-            color: var(--primary-color);
-            font-weight: 600;
-        }
-        
-        .error-message {
-            color: var(--danger-color);
-            font-weight: 600;
-        }
-        
-        .main-content {
-            background-color: white;
-            border-radius: 8px;
-            padding: 30px;
-            box-shadow: var(--shadow);
-            min-height: 400px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-        
+
         .btn-container {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-top: 20px;
+          flex-direction: column;
+          width: 100%;
+          max-width: 300px;
+          margin-left: auto;
+          margin-right: auto;
         }
-        
+
         .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: var(--shadow);
-            font-size: 16px;
-            min-width: 150px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
+          width: 100%;
         }
-        
-        .btn-primary {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background-color: #1b5e20;
-            transform: translateY(-2px);
-        }
-        
-        .btn-secondary {
-            background-color: var(--secondary-color);
-            color: white;
-        }
-        
-        .btn-secondary:hover {
-            background-color: #0d47a1;
-            transform: translateY(-2px);
-        }
-        
-        .btn-accent {
-            background-color: var(--accent-color);
-            color: white;
-        }
-        
-        .btn-accent:hover {
-            background-color: #e65100;
-            transform: translateY(-2px);
-        }
-        
-        .btn-danger {
-            background-color: var(--danger-color);
-            color: white;
-        }
-        
-        .btn-danger:hover {
-            background-color: #b71c1c;
-            transform: translateY(-2px);
-        }
-        
-        .welcome-text {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
+
         .welcome-text h1 {
-            font-size: 36px;
-            margin-bottom: 15px;
-            color: var(--secondary-color);
+          font-size: 26px;
         }
-        
-        .welcome-text p {
-            font-size: 18px;
-            color: #555;
-            max-width: 700px;
-            margin: 0 auto;
+
+        .main-content {
+          padding: 25px;
         }
-        
-        footer {
-            text-align: center;
-            margin-top: 40px;
-            padding: 20px;
-            color: #666;
-            font-size: 14px;
+      }
+
+      @media (max-width: 576px) {
+        .main-content {
+          padding: 20px;
         }
-        
-        @media (max-width: 768px) {
-            .btn-container {
-                flex-direction: column;
-                width: 100%;
-            }
-            
-            .btn {
-                width: 100%;
-            }
-            
-            .welcome-text h1 {
-                font-size: 28px;
-            }
+
+        .main-content-wrapper {
+          padding: 20px 0;
         }
+      }
     </style>
-</head>
-<body>
-    <header>
-        <div class="container header-content">
-            <div class="logo">Stock<span>Market</span></div>
-        </div>
-    </header>
-    
-    <div class="container">
-        <div class="notification" th:if="${session.pass != null || session.fail != null}">
-            <h3 class="success-message" th:if="${session.pass != null}" th:text="${session.pass}"></h3>
-            <h3 class="error-message" th:if="${session.fail != null}" th:text="${session.fail}"></h3>
-            <span th:text="${@stockServiceImpl.removeMessage()}"></span>
-        </div>
-        
-        <div class="main-content">
-            <div class="welcome-text">
-                <h1>Welcome to StockMarket</h1>
-                <p th:if="${session.user==null && session.admin==null}">
-                    Your trusted platform for stock trading and investment. Register or login to start your investment journey.
-                </p>
-                <p th:if="${session.user!=null}">
-                    Welcome back! Manage your portfolio and explore new investment opportunities.
-                </p>
-                <p th:if="${session.admin!=null}">
-                    Admin Dashboard - Manage stocks and monitor market activities.
-                </p>
-            </div>
-            
-            <div class="btn-container" th:if="${session.user==null && session.admin==null}">
-                <a href="/register" class="btn btn-primary">Register</a>
-                <a href="/login" class="btn btn-secondary">Login</a>
-            </div>
-            
-            <div class="btn-container" th:if="${session.user!=null}">
-                <a href="/view-stocks" class="btn btn-primary">View Stocks</a>
-                <a href="/wallet" class="btn btn-secondary">Wallet</a>
-                <a href="/portfolio" class="btn btn-accent">Portfolio</a>
-                <a href="/logout" class="btn btn-danger">Logout</a>
-            </div>
-            
-            <div class="btn-container" th:if="${session.admin!=null}">
-                <a href="/add-stock" class="btn btn-primary">Add Stock</a>
-                <a href="/manage-stocks" class="btn btn-secondary">Manage Stock</a>
-                <a href="/overview" class="btn btn-accent">View Overview</a>
-                <a href="/logout" class="btn btn-danger">Logout</a>
-            </div>
-        </div>
+  </head>
+  <body>
+    <div
+      class="notification-container"
+      th:if="${session.pass != null || session.fail != null}"
+    >
+      <div class="notification">
+        <h3
+          class="success-message"
+          th:if="${session.pass != null}"
+          th:text="${session.pass}"
+        ></h3>
+        <h3
+          class="error-message"
+          th:if="${session.fail != null}"
+          th:text="${session.fail}"
+        ></h3>
+        <span th:text="${@stockServiceImpl.removeMessage()}"></span>
+      </div>
     </div>
-    
-    <footer>
-        <div class="container">
-            <p>&copy; 2023 StockMarket. All rights reserved.</p>
+
+    <nav class="navbar" id="navbar">
+      <div class="container navbar-container">
+        <a href="/" class="logo">
+          <i class="fas fa-chart-line"></i>
+          Stock<span>Market</span>
+        </a>
+
+        <button class="mobile-menu-btn" id="mobile-menu-btn">
+          <i class="fas fa-bars"></i>
+        </button>
+
+        <div class="nav-links" id="nav-links">
+          <a
+            th:if="${session.user==null && session.admin==null}"
+            href="/login"
+            class="nav-link"
+            >Login</a
+          >
+          <a
+            th:if="${session.user==null && session.admin==null}"
+            href="/register"
+            class="nav-link"
+            >Register</a
+          >
+          <a
+            th:if="${session.user!=null || session.admin!=null}"
+            href="/logout"
+            class="nav-link"
+            >Logout</a
+          >
         </div>
+      </div>
+    </nav>
+
+    <div class="main-content-wrapper">
+      <div class="container">
+        <div class="main-content">
+          <div class="welcome-text">
+            <h1>Welcome to StockMarket</h1>
+            <p th:if="${session.user==null && session.admin==null}">
+              Your trusted platform for stock trading and investment. Register
+              or login to start your investment journey.
+            </p>
+            <p th:if="${session.user!=null}">
+              Welcome back,
+              <span
+                th:text="${session.user.name}"
+                style="font-weight: 600"
+              ></span
+              >! Manage your portfolio and explore new investment opportunities.
+              Access real-time market data, track your investments, analyze
+              market trends, and execute trades seamlessly. View your
+              transaction history, set price alerts, and stay updated with the
+              latest market news.
+            </p>
+            <p th:if="${session.admin!=null}">
+              Admin Dashboard - Manage stocks, monitor market activities,
+              oversee user accounts, and maintain system security. Access
+              comprehensive analytics and reporting tools to ensure smooth
+              platform operations.
+            </p>
+          </div>
+
+          <div
+            class="features"
+            th:if="${session.user==null && session.admin==null}"
+          >
+            <div class="feature-card">
+              <div class="feature-icon">
+                <i class="fas fa-chart-line"></i>
+              </div>
+              <h3 class="feature-title">Real-time Trading</h3>
+              <p class="feature-description">
+                Access real-time market data and execute trades instantly with
+                our advanced trading platform.
+              </p>
+            </div>
+
+            <div class="feature-card">
+              <div class="feature-icon">
+                <i class="fas fa-wallet"></i>
+              </div>
+              <h3 class="feature-title">Secure Wallet</h3>
+              <p class="feature-description">
+                Manage your funds securely with our state-of-the-art digital
+                wallet system.
+              </p>
+            </div>
+
+
+          </div>
+
+          <div class="btn-container" th:if="${session.user!=null}">
+            <a href="/view-stocks" class="btn btn-primary">
+              <i class="fas fa-chart-line"></i> View Stocks
+            </a>
+            <a href="/wallet" class="btn btn-secondary">
+              <i class="fas fa-wallet"></i> Wallet
+            </a>
+            <a href="/portfolio" class="btn btn-accent">
+              <i class="fas fa-briefcase"></i> Portfolio
+            </a>
+          </div>
+
+          <div class="btn-container" th:if="${session.admin!=null}">
+            <a href="/add-stock" class="btn btn-primary">
+              <i class="fas fa-plus-circle"></i> Add Stock
+            </a>
+            <a href="/manage-stocks" class="btn btn-secondary">
+              <i class="fas fa-cogs"></i> Manage Stock
+            </a>
+            <a href="/overview" class="btn btn-accent">
+              <i class="fas fa-chart-pie"></i> View Overview
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="container">
+        <div class="footer-bottom">
+          <p>&copy; 2025 StockMarket. All rights reserved.</p>
+        </div>
+      </div>
     </footer>
-</body>
+
+    <script>
+      const navbar = document.getElementById("navbar");
+      window.addEventListener("scroll", function () {
+        if (window.scrollY > 50) {
+          navbar.classList.add("scrolled");
+        } else {
+          navbar.classList.remove("scrolled");
+        }
+      });
+
+      const mobileMenuBtn = document.getElementById("mobile-menu-btn");
+      const navLinks = document.getElementById("nav-links");
+
+      mobileMenuBtn.addEventListener("click", function () {
+        navLinks.classList.toggle("active");
+
+        // Change icon based on menu state
+        const icon = mobileMenuBtn.querySelector("i");
+        if (navLinks.classList.contains("active")) {
+          icon.classList.remove("fa-bars");
+          icon.classList.add("fa-times");
+        } else {
+          icon.classList.remove("fa-times");
+          icon.classList.add("fa-bars");
+        }
+      });
+
+      const notificationContainer = document.querySelector(
+        ".notification-container"
+      );
+      if (notificationContainer) {
+        setTimeout(() => {
+          const notification =
+            notificationContainer.querySelector(".notification");
+          notification.style.opacity = "0";
+          notification.style.transform = "translateY(-20px)";
+          setTimeout(() => {
+            notificationContainer.style.display = "none";
+          }, 500);
+        }, 2000);
+      }
+    </script>
+  </body>
 </html>

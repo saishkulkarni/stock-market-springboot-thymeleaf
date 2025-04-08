@@ -3,42 +3,684 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title> 
+    <meta name="description" content="StockMarket - View and purchase stock details">
+    <title>StockMarket - Stock Details</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #2e7d32;
+            --primary-dark: #005005;
+            --primary-light: #60ad5e;
+            --secondary-color: #1565c0;
+            --secondary-dark: #003c8f;
+            --secondary-light: #5e92f3;
+            --accent-color: #f57c00;
+            --accent-dark: #bb4d00;
+            --accent-light: #ffad42;
+            --danger-color: #c62828;
+            --danger-dark: #8e0000;
+            --danger-light: #ff5f52;
+            --success-color: #2e7d32;
+            --warning-color: #f9a825;
+            --info-color: #0277bd;
+            --light-color: #f5f5f5;
+            --dark-color: #212121;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-400: #ced4da;
+            --gray-500: #adb5bd;
+            --gray-600: #6c757d;
+            --gray-700: #495057;
+            --gray-800: #343a40;
+            --gray-900: #212529;
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        html, body {
+            height: 100%;
+        }
+        
+        body {
+            background-color: var(--gray-100);
+            color: var(--gray-800);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Navbar Styles */
+        .navbar {
+            background-color: white;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 15px 0;
+            transition: var(--transition);
+        }
+        
+        .navbar.scrolled {
+            padding: 10px 0;
+        }
+        
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--dark-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            color: var(--primary-color);
+            margin-right: 10px;
+            font-size: 28px;
+        }
+        
+        .logo span {
+            color: var(--accent-color);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-link {
+            color: var(--gray-700);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 8px 12px;
+            border-radius: 4px;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary-color);
+            background-color: var(--gray-100);
+        }
+        
+        .nav-link.active {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--gray-700);
+            cursor: pointer;
+        }
+        
+        /* Notification Styles */
+        .notification-container {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            pointer-events: none;
+        }
+        
+        .notification {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px 20px;
+            box-shadow: var(--shadow);
+            position: relative;
+            border-left: 4px solid var(--primary-color);
+            max-width: 600px;
+            width: 90%;
+            pointer-events: auto;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        
+        .success-message {
+            color: var(--success-color);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+        
+        .success-message::before {
+            content: '\f058';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        .error-message {
+            color: var(--danger-color);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+        
+        .error-message::before {
+            content: '\f057';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        /* Main Content */
+        .main-content-wrapper {
+            flex: 1 0 auto;
+            padding: 40px 0;
+        }
+        
+        .main-content {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+        
+        .page-title {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .page-title i {
+            color: var(--accent-color);
+        }
+        
+        .page-description {
+            font-size: 16px;
+            color: var(--gray-600);
+            margin-bottom: 30px;
+            max-width: 800px;
+            padding: 10px 15px;
+            background-color: var(--gray-100);
+            border-left: 4px solid var(--warning-color);
+            border-radius: 0 4px 4px 0;
+        }
+        
+        /* Stock Details */
+        .stock-details-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .stock-info {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .stock-purchase {
+            flex: 1;
+            min-width: 300px;
+            background-color: var(--gray-100);
+            padding: 25px;
+            border-radius: 10px;
+        }
+        
+        .stock-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        .stock-table th, .stock-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .stock-table th {
+            font-weight: 600;
+            color: var(--gray-700);
+            width: 40%;
+        }
+        
+        .stock-table td {
+            font-weight: 500;
+            color: var(--gray-800);
+        }
+        
+        .stock-ticker-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--secondary-color);
+        }
+        
+        .stock-price-value {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .stock-change-value {
+            display: inline-flex;
+            align-items: center;
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        
+        .stock-change-value.positive {
+            background-color: rgba(46, 125, 50, 0.1);
+            color: var(--success-color);
+        }
+        
+        .stock-change-value.negative {
+            background-color: rgba(198, 40, 40, 0.1);
+            color: var(--danger-color);
+        }
+        
+        .change-icon {
+            margin-right: 5px;
+        }
+        
+        /* Purchase Form */
+        .purchase-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--secondary-color);
+        }
+        
+        .purchase-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            color: var(--gray-700);
+        }
+        
+        .form-control {
+            padding: 12px 15px;
+            border: 1px solid var(--gray-300);
+            border-radius: 6px;
+            font-size: 16px;
+            transition: var(--transition);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 2px rgba(21, 101, 192, 0.2);
+        }
+        
+        .purchase-summary {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            border-left: 4px solid var(--info-color);
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .summary-label {
+            font-weight: 500;
+            color: var(--gray-700);
+        }
+        
+        .summary-value {
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+        
+        .total-cost {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--secondary-color);
+        }
+        
+        /* Button Styles */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+            font-size: 16px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn i {
+            font-size: 18px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--secondary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+            width: 100%;
+        }
+        
+        .btn-success:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--gray-800);
+            color: var(--gray-300);
+            padding: 20px 0;
+            flex-shrink: 0;
+            text-align: center;
+        }
+        
+        .footer-bottom {
+            padding-top: 5px;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background-color: white;
+                flex-direction: column;
+                padding: 20px;
+                box-shadow: var(--shadow);
+                z-index: 1000;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .stock-details-container {
+                flex-direction: column;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .main-content-wrapper {
+                padding: 20px 0;
+            }
+            
+            .page-title {
+                font-size: 24px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Stock</h1>
-    <h3>Note:  There Might be some changs in Price and Volume check below and confirm</h3>
-    <div>
-        <table>
-            <tr>
-                <th>Ticker: </th>
-                <td th:text="${stock.ticker}"></td>
-            </tr>
-            
-            <tr>
-                <th>Compnay Name: </th>
-                <td th:text="${stock.companyName}"></td>
-            </tr>
-            
-            <tr>
-                <th>Price: </th>
-                <td th:text="${stock.price}"></td>
-            </tr>
-            <tr>
-                <th>Volume: </th>
-                <td th:text="${stock.quantity}"></td>
-            </tr>
-            <tr>
-                <th>Change Percentage: </th>
-                <td th:text="${stock.changes}"></td>
-            </tr>
-        </table>
-
-        <form action="/buy-stock" method="post">
-            <input type="text" name="quantity" placeholder="Enter Quantity">
-            <input type="hidden" name="ticker" th:value="${stock.ticker}">
-            <input type="submit" value="Buy">
-        </form>
+    <div class="notification-container" th:if="${session.pass != null || session.fail != null}">
+        <div class="notification">
+            <h3 class="success-message" th:if="${session.pass != null}" th:text="${session.pass}"></h3>
+            <h3 class="error-message" th:if="${session.fail != null}" th:text="${session.fail}"></h3>
+            <span th:text="${@stockServiceImpl.removeMessage()}"></span>
+        </div>
     </div>
+
+    <nav class="navbar" id="navbar">
+        <div class="container navbar-container">
+            <a href="/" class="logo">
+                <i class="fas fa-chart-line"></i>
+                Stock<span>Market</span>
+            </a>
+            
+            <button class="mobile-menu-btn" id="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="nav-links" id="nav-links">
+                <a href="/logout" class="nav-link">Logout</a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="main-content-wrapper">
+        <div class="container">
+            <div class="main-content">
+                <h2 class="page-title">
+                    <i class="fas fa-chart-bar"></i> Stock Details
+                </h2>
+                <p class="page-description">
+                    <i class="fas fa-info-circle"></i> Note: There might be some changes in price and volume. Please review the details below before confirming your purchase.
+                </p>
+                
+                <div class="stock-details-container">
+                    <div class="stock-info">
+                        <table class="stock-table">
+                            <tr>
+                                <th>Ticker Symbol:</th>
+                                <td class="stock-ticker-value" th:text="${stock.ticker}"></td>
+                            </tr>
+                            <tr>
+                                <th>Company Name:</th>
+                                <td th:text="${stock.companyName}"></td>
+                            </tr>
+                            <tr>
+                                <th>Current Price:</th>
+                                <td class="stock-price-value" th:text="'₹' + ${stock.price}"></td>
+                            </tr>
+                            <tr>
+                                <th>Available Volume:</th>
+                                <td th:text="${#numbers.formatInteger(stock.quantity, 1, 'COMMA')} + ' shares'"></td>                            </tr>
+                            <tr>
+                                <th>Change Percentage:</th>
+                                <td>
+                                    <span th:class="${stock.changes >= 0 ? 'stock-change-value positive' : 'stock-change-value negative'}">
+                                        <i th:class="${stock.changes >= 0 ? 'fas fa-arrow-up change-icon' : 'fas fa-arrow-down change-icon'}"></i>
+                                        <span th:text="${stock.changes >= 0 ? '+' + stock.changes + '%' : stock.changes + '%'}"></span>
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+                        
+                        <a href="/view-stocks" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to Stocks
+                        </a>
+                    </div>
+                    
+                    <div class="stock-purchase">
+                        <h3 class="purchase-title">Purchase Shares</h3>
+                        
+                        <form class="purchase-form" action="/buy-stock" method="post" id="purchase-form">
+                            <div class="form-group">
+                                <label for="quantity" class="form-label">Number of Shares</label>
+                                <input type="number" id="quantity" class="form-control" name="quantity" placeholder="Enter quantity" min="1" th:max="${stock.quantity}" required>
+                                <input type="hidden" name="ticker" th:value="${stock.ticker}">
+                            </div>
+                            
+                            <div class="purchase-summary" id="purchase-summary" style="display: none;">
+                                <div class="summary-item">
+                                    <span class="summary-label">Price per Share:</span>
+                                    <span class="summary-value" th:text="'₹' + ${stock.price}"></span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="summary-label">Number of Shares:</span>
+                                    <span class="summary-value" id="summary-quantity">0</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span class="summary-label total-cost">Total Cost:</span>
+                                    <span class="summary-value total-cost" id="summary-total">₹0.00</span>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-shopping-cart"></i> Buy Now
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">            
+            <div class="footer-bottom">
+                <p>&copy; 2025 StockMarket. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Custom JavaScript -->
+    <script th:inline="javascript">
+        // Get stock price from Thymeleaf
+        const stockPrice = [[${stock.price}]];
+        
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+        
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const navLinks = document.getElementById('nav-links');
+        
+        mobileMenuBtn.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+            
+            // Change icon based on menu state
+            const icon = mobileMenuBtn.querySelector('i');
+            if (navLinks.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+        
+        // Auto-hide notifications after 5 seconds
+        const notificationContainer = document.querySelector('.notification-container');
+        if (notificationContainer) {
+            setTimeout(() => {
+                const notification = notificationContainer.querySelector('.notification');
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                    notificationContainer.style.display = 'none';
+                }, 500);
+            }, 2000);
+        }
+        
+        // Purchase calculator
+        const quantityInput = document.getElementById('quantity');
+        const purchaseSummary = document.getElementById('purchase-summary');
+        const summaryQuantity = document.getElementById('summary-quantity');
+        const summaryTotal = document.getElementById('summary-total');
+        
+        quantityInput.addEventListener('input', function() {
+            const quantity = parseInt(this.value) || 0;
+            
+            if (quantity > 0) {
+                purchaseSummary.style.display = 'block';
+                summaryQuantity.textContent = quantity;
+                const total = (quantity * stockPrice).toFixed(2);
+                summaryTotal.textContent = '₹' + total;
+            } else {
+                purchaseSummary.style.display = 'none';
+            }
+        });
+        
+        // Auto-focus quantity input
+        document.addEventListener('DOMContentLoaded', function() {
+            quantityInput.focus();
+        });
+        
+    </script>
 </body>
 </html>
+

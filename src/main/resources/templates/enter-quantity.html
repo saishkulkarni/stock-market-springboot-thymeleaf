@@ -3,17 +3,577 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta name="description" content="StockMarket - Sell your stocks">
+    <title>StockMarket - Sell Stock</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #2e7d32;
+            --primary-dark: #005005;
+            --primary-light: #60ad5e;
+            --secondary-color: #1565c0;
+            --secondary-dark: #003c8f;
+            --secondary-light: #5e92f3;
+            --accent-color: #f57c00;
+            --accent-dark: #bb4d00;
+            --accent-light: #ffad42;
+            --danger-color: #c62828;
+            --danger-dark: #8e0000;
+            --danger-light: #ff5f52;
+            --success-color: #2e7d32;
+            --warning-color: #f9a825;
+            --info-color: #0277bd;
+            --light-color: #f5f5f5;
+            --dark-color: #212121;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-400: #ced4da;
+            --gray-500: #adb5bd;
+            --gray-600: #6c757d;
+            --gray-700: #495057;
+            --gray-800: #343a40;
+            --gray-900: #212529;
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        html, body {
+            height: 100%;
+        }
+        
+        body {
+            background-color: var(--gray-100);
+            color: var(--gray-800);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Navbar Styles */
+        .navbar {
+            background-color: white;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 15px 0;
+            transition: var(--transition);
+        }
+        
+        .navbar.scrolled {
+            padding: 10px 0;
+        }
+        
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--dark-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            color: var(--primary-color);
+            margin-right: 10px;
+            font-size: 28px;
+        }
+        
+        .logo span {
+            color: var(--accent-color);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-link {
+            color: var(--gray-700);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 8px 12px;
+            border-radius: 4px;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary-color);
+            background-color: var(--gray-100);
+        }
+        
+        .nav-link.active {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--gray-700);
+            cursor: pointer;
+        }
+        
+        /* Notification Styles */
+        .notification-container {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            pointer-events: none;
+        }
+        
+        .notification {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px 20px;
+            box-shadow: var(--shadow);
+            position: relative;
+            border-left: 4px solid var(--primary-color);
+            max-width: 600px;
+            width: 90%;
+            pointer-events: auto;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        
+        .success-message {
+            color: var(--success-color);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+        
+        .success-message::before {
+            content: '\f058';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        .error-message {
+            color: var(--danger-color);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+        
+        .error-message::before {
+            content: '\f057';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        /* Main Content */
+        .main-content-wrapper {
+            flex: 1 0 auto;
+            padding: 40px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .main-content {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .page-title {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .page-title i {
+            color: var(--accent-color);
+        }
+        
+        /* Stock Card */
+        .stock-card {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stock-card::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+        
+        .stock-card::after {
+            content: '';
+            position: absolute;
+            bottom: -60px;
+            left: -60px;
+            width: 180px;
+            height: 180px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+        
+        .stock-ticker {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .stock-price {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .stock-price-label {
+            font-size: 14px;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Form Styles */
+        .sell-form {
+            background-color: var(--gray-100);
+            border-radius: 10px;
+            padding: 25px;
+        }
+        
+        .form-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--gray-800);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .form-title i {
+            color: var(--danger-color);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--gray-700);
+            text-align: left;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--gray-300);
+            border-radius: 6px;
+            font-size: 16px;
+            transition: var(--transition);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 2px rgba(21, 101, 192, 0.2);
+        }
+        
+        /* Button Styles */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+            font-size: 16px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+        }
+        
+        .btn i {
+            font-size: 18px;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: var(--danger-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: white;
+            margin-top: 15px;
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--secondary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--gray-800);
+            color: var(--gray-300);
+            padding: 20px 0;
+            flex-shrink: 0;
+            text-align: center;
+        }
+        
+        .footer-bottom {
+            padding-top: 5px;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background-color: white;
+                flex-direction: column;
+                padding: 20px;
+                box-shadow: var(--shadow);
+                z-index: 1000;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .main-content-wrapper {
+                padding: 20px 0;
+            }
+            
+            .page-title {
+                font-size: 24px;
+            }
+            
+            .stock-ticker {
+                font-size: 28px;
+            }
+            
+            .stock-price {
+                font-size: 20px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div align="center">
-    <h1>The Current price of <span th:text="${stock.ticker}"></span> is <span th:text="${stock.price}"></span> </h1>
+    <div class="notification-container" th:if="${session.pass != null || session.fail != null}">
+        <div class="notification">
+            <h3 class="success-message" th:if="${session.pass != null}" th:text="${session.pass}"></h3>
+            <h3 class="error-message" th:if="${session.fail != null}" th:text="${session.fail}"></h3>
+            <span th:text="${@stockServiceImpl.removeMessage()}"></span>
+        </div>
+    </div>
 
-    <form action="/sell" method="post">
-        Enter Quantity: <input type="number" name="quantity" id="quantity">
-        <input type="hidden" name="ticker" th:value="${stock.ticker}">
-        <input type="submit" value="Sell">
-    </form>
-</div>
+    <nav class="navbar" id="navbar">
+        <div class="container navbar-container">
+            <a href="/" class="logo">
+                <i class="fas fa-chart-line"></i>
+                Stock<span>Market</span>
+            </a>
+            
+            <button class="mobile-menu-btn" id="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="nav-links" id="nav-links">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/view-stocks" class="nav-link">View Stocks</a>
+                <a href="/wallet" class="nav-link">Wallet</a>
+                <a href="/portfolio" class="nav-link">Portfolio</a>
+                <a href="/logout" class="nav-link">Logout</a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="main-content-wrapper">
+        <div class="container">
+            <div class="main-content">
+                <h2 class="page-title">
+                    <i class="fas fa-money-bill-wave"></i> Sell Stock
+                </h2>
+                
+                <div class="stock-card">
+                    <div class="stock-ticker" th:text="${stock.ticker}"></div>
+                    <div class="stock-price">
+                        <span class="stock-price-label">Current Price:</span>
+                        <span th:text="'₹' + ${stock.price}"></span>
+                    </div>
+                </div>
+                
+                <div class="sell-form">
+                    <h3 class="form-title">
+                        <i class="fas fa-exchange-alt"></i> Enter Quantity to Sell
+                    </h3>
+                    
+                    <form action="/sell" method="post">
+                        <div class="form-group">
+                            <label for="quantity" class="form-label">Quantity</label>
+                            <input type="number" id="quantity" class="form-control" name="quantity" placeholder="Enter number of shares" min="1" required>
+                        </div>
+                        
+                        <input type="hidden" name="ticker" th:value="${stock.ticker}">
+                        
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-money-bill-wave"></i> Sell Shares
+                        </button>
+                    </form>
+                    
+                    <a href="/portfolio" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Back to Portfolio
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">            
+            <div class="footer-bottom">
+                <p>&copy; 2023 StockMarket. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+        
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const navLinks = document.getElementById('nav-links');
+        
+        mobileMenuBtn.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+            
+            // Change icon based on menu state
+            const icon = mobileMenuBtn.querySelector('i');
+            if (navLinks.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+        
+        // Auto-hide notifications after 5 seconds
+        const notificationContainer = document.querySelector('.notification-container');
+        if (notificationContainer) {
+            setTimeout(() => {
+                const notification = notificationContainer.querySelector('.notification');
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                    notificationContainer.style.display = 'none';
+                }, 500);
+            }, 5000);
+        }
+        
+        // Auto-focus quantity input
+        document.addEventListener('DOMContentLoaded', function() {
+            const quantityInput = document.getElementById('quantity');
+            if (quantityInput) {
+                quantityInput.focus();
+            }
+        });
+    </script>
 </body>
 </html>
+

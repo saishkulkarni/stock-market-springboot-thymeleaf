@@ -162,10 +162,10 @@ public class StockServiceImpl implements StockService {
 	@Override
 	public String logout(HttpSession session) {
 		User user = (User) session.getAttribute("user");
-		session.removeAttribute("user");
-		session.removeAttribute("admin");
 		if (user != null)
 			session.setAttribute("pass", "Logout Success, Sad to see you go Bye " + user.getName());
+		session.removeAttribute("user");
+		session.removeAttribute("admin");
 		return "redirect:/";
 	}
 
@@ -532,7 +532,6 @@ public class StockServiceImpl implements StockService {
 							transactionRepository.save(transaction);
 							user.setAmount(user.getAmount()
 									+ (stock.getPrice() - (stock.getPrice() * platformPercentage) * quantity));
-							userRepository.save(user);
 						} else {
 							transactions.remove(transaction);
 							user.setAmount(user.getAmount() + (stock.getPrice()* platformPercentage * quantity));
@@ -542,7 +541,7 @@ public class StockServiceImpl implements StockService {
 
 						stock.setQuantity(stock.getQuantity() + quantity);
 						stockRepository.save(stock);
-						session.setAttribute("user", user);
+						session.setAttribute("user", userRepository.save(user));
 						session.setAttribute("pass", "Stock Sold Success");
 
 						AdminData data = dataRepository.findById(1).get();

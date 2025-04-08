@@ -3,110 +3,279 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StockMarket - Manage Stocks</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta name="description" content="StockMarket - Browse and buy stocks">
+    <title>StockMarket - View Stocks</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
         :root {
             --primary-color: #2e7d32;
+            --primary-dark: #005005;
+            --primary-light: #60ad5e;
             --secondary-color: #1565c0;
+            --secondary-dark: #003c8f;
+            --secondary-light: #5e92f3;
             --accent-color: #f57c00;
+            --accent-dark: #bb4d00;
+            --accent-light: #ffad42;
             --danger-color: #c62828;
+            --danger-dark: #8e0000;
+            --danger-light: #ff5f52;
             --success-color: #2e7d32;
+            --warning-color: #f9a825;
+            --info-color: #0277bd;
             --light-color: #f5f5f5;
             --dark-color: #212121;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-400: #ced4da;
+            --gray-500: #adb5bd;
+            --gray-600: #6c757d;
+            --gray-700: #495057;
+            --gray-800: #343a40;
+            --gray-900: #212529;
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
             --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --card-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
         }
         
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        html, body {
+            height: 100%;
         }
         
         body {
-            background-color: #f9f9f9;
-            color: var(--dark-color);
+            background-color: var(--gray-100);
+            color: var(--gray-800);
             line-height: 1.6;
+            display: flex;
+            flex-direction: column;
         }
         
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 0 20px;
         }
         
-        header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 20px 0;
+        /* Navbar Styles */
+        .navbar {
+            background-color: white;
             box-shadow: var(--shadow);
-            margin-bottom: 30px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 15px 0;
+            transition: var(--transition);
         }
         
-        .header-content {
+        .navbar.scrolled {
+            padding: 10px 0;
+        }
+        
+        .navbar-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
         
         .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--dark-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            color: var(--primary-color);
+            margin-right: 10px;
             font-size: 28px;
-            font-weight: bold;
         }
         
         .logo span {
             color: var(--accent-color);
         }
         
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-link {
+            color: var(--gray-700);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 8px 12px;
+            border-radius: 4px;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary-color);
+            background-color: var(--gray-100);
+        }
+        
+        .nav-link.active {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--gray-700);
+            cursor: pointer;
+        }
+        
+        /* Notification Styles */
+        .notification-container {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            pointer-events: none;
+        }
+        
         .notification {
             background-color: white;
             border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 25px;
+            padding: 15px 20px;
             box-shadow: var(--shadow);
+            position: relative;
+            border-left: 4px solid var(--primary-color);
+            max-width: 600px;
+            width: 90%;
+            pointer-events: auto;
+            transition: opacity 0.5s ease, transform 0.5s ease;
         }
         
         .success-message {
-            color: var(--primary-color);
+            color: var(--success-color);
             font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+        
+        .success-message::before {
+            content: '\f058';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            margin-right: 10px;
+            font-size: 18px;
         }
         
         .error-message {
             color: var(--danger-color);
             font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+        
+        .error-message::before {
+            content: '\f057';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        /* Main Content */
+        .main-content-wrapper {
+            flex: 1 0 auto;
+            padding: 40px 0;
         }
         
         .main-content {
             background-color: white;
-            border-radius: 8px;
+            border-radius: 12px;
             padding: 30px;
             box-shadow: var(--shadow);
-        }
-        
-        .page-title {
-            color: var(--secondary-color);
-            font-size: 28px;
-            margin-bottom: 10px;
-        }
-        
-        .page-description {
-            color: #555;
             margin-bottom: 30px;
         }
         
+        .page-title {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: var(--secondary-color);
+        }
+        
+        .page-description {
+            font-size: 16px;
+            color: var(--gray-600);
+            margin-bottom: 30px;
+            max-width: 800px;
+        }
+        
+        /* Search Form */
+        .search-form {
+            display: flex;
+            margin-bottom: 30px;
+            max-width: 600px;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid var(--gray-300);
+            border-radius: 6px 0 0 6px;
+            font-size: 16px;
+            transition: var(--transition);
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 2px rgba(21, 101, 192, 0.2);
+        }
+        
+        .search-btn {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 0 6px 6px 0;
+            padding: 0 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .search-btn:hover {
+            background-color: var(--secondary-dark);
+        }
+        
+        /* Stock Grid */
         .stock-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 20px;
+            margin-bottom: 30px;
         }
         
         .stock-card {
             background-color: white;
-            border-radius: 8px;
+            border-radius: 10px;
             padding: 20px;
-            box-shadow: var(--card-shadow);
+            box-shadow: var(--shadow);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             position: relative;
             overflow: hidden;
@@ -114,7 +283,7 @@
         
         .stock-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-lg);
         }
         
         .stock-card.positive {
@@ -127,14 +296,14 @@
         
         .stock-ticker {
             font-size: 24px;
-            font-weight: bold;
+            font-weight: 700;
             color: var(--secondary-color);
             margin-bottom: 5px;
         }
         
         .stock-company {
-            font-size: 16px;
-            color: #666;
+            font-size: 15px;
+            color: var(--gray-600);
             margin-bottom: 15px;
         }
         
@@ -147,15 +316,16 @@
         
         .stock-price {
             font-size: 22px;
-            font-weight: bold;
+            font-weight: 700;
         }
         
         .stock-change {
             display: flex;
             align-items: center;
-            font-weight: bold;
+            font-weight: 600;
             padding: 5px 10px;
             border-radius: 20px;
+            font-size: 14px;
         }
         
         .stock-change.positive {
@@ -175,13 +345,13 @@
         
         .stock-volume {
             margin-top: 10px;
-            color: #666;
+            color: var(--gray-600);
             font-size: 14px;
         }
         
         .stock-volume span {
-            font-weight: bold;
-            color: #333;
+            font-weight: 600;
+            color: var(--gray-800);
         }
         
         .graph-indicator {
@@ -202,20 +372,45 @@
             color: var(--danger-color);
         }
         
+        .stock-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 15px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Button Styles */
         .btn {
-            padding: 12px 24px;
+            padding: 10px 20px;
             border: none;
             border-radius: 6px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: var(--shadow);
-            font-size: 16px;
-            min-width: 150px;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+            font-size: 14px;
             text-align: center;
             text-decoration: none;
-            display: inline-block;
-            margin-top: 30px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn i {
+            font-size: 16px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
         }
         
         .btn-secondary {
@@ -224,105 +419,230 @@
         }
         
         .btn-secondary:hover {
-            background-color: #0d47a1;
+            background-color: var(--secondary-dark);
             transform: translateY(-2px);
+            box-shadow: var(--shadow);
         }
         
-        .btn-danger {
-            background-color: var(--danger-color);
+        .btn-success {
+            background-color: var(--success-color);
             color: white;
-            padding: 8px 16px;
-            min-width: auto;
-            margin-top: 15px;
-            font-size: 14px;
         }
         
-        .btn-danger:hover {
-            background-color: #b71c1c;
+        .btn-success:hover {
+            background-color: var(--primary-dark);
             transform: translateY(-2px);
+            box-shadow: var(--shadow);
         }
         
-        .stock-actions {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 15px;
-        }
-        
+        /* Footer */
         footer {
+            background-color: var(--gray-800);
+            color: var(--gray-300);
+            padding: 20px 0;
+            flex-shrink: 0;
             text-align: center;
-            margin-top: 40px;
-            padding: 20px;
-            color: #666;
-            font-size: 14px;
+        }
+        
+        .footer-bottom {
+            padding-top: 5px;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .stock-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
         }
         
         @media (max-width: 768px) {
-            .stock-grid {
-                grid-template-columns: 1fr;
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background-color: white;
+                flex-direction: column;
+                padding: 20px;
+                box-shadow: var(--shadow);
+                z-index: 1000;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
             }
             
             .main-content {
                 padding: 20px;
             }
+            
+            .stock-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-form {
+                flex-direction: column;
+            }
+            
+            .search-input {
+                border-radius: 6px;
+                margin-bottom: 10px;
+            }
+            
+            .search-btn {
+                border-radius: 6px;
+                padding: 12px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .main-content-wrapper {
+                padding: 20px 0;
+            }
+            
+            .page-title {
+                font-size: 24px;
+            }
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="container header-content">
-            <div class="logo">Stock<span>Market</span></div>
-        </div>
-    </header>
-    
-    <div class="container">
-        <div class="notification" th:if="${session.pass != null || session.fail != null}">
+    <div class="notification-container" th:if="${session.pass != null || session.fail != null}">
+        <div class="notification">
             <h3 class="success-message" th:if="${session.pass != null}" th:text="${session.pass}"></h3>
             <h3 class="error-message" th:if="${session.fail != null}" th:text="${session.fail}"></h3>
             <span th:text="${@stockServiceImpl.removeMessage()}"></span>
         </div>
-        
-        <div class="main-content">
-            <h2 class="page-title">Stock Market Overview</h2>
-            <p class="page-description">Monitor and manage all available stocks in the platform.</p>
-            <form action="/view-stocks">
-            <input type="text" id="search-input" name="company" placeholder="Search stocks..." />
-                <button>Search</button>
-        </form>
-            <div class="stock-grid">
-                <div th:each="stock:${stocks}" th:class="${stock.changes >= 0 ? 'stock-card positive' : 'stock-card negative'}">
-                    <h3 class="stock-ticker" th:text="${stock.ticker}"></h3>
-                    <p class="stock-company" th:text="${stock.companyName}"></p>
+    </div>
+
+    <nav class="navbar" id="navbar">
+        <div class="container navbar-container">
+            <a href="/" class="logo">
+                <i class="fas fa-chart-line"></i>
+                Stock<span>Market</span>
+            </a>
+            
+            <button class="mobile-menu-btn" id="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <div class="nav-links" id="nav-links">
+                <a href="/logout" class="nav-link">Logout</a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="main-content-wrapper">
+        <div class="container">
+            <div class="main-content">
+                <h2 class="page-title">Available Stocks</h2>
+                <p class="page-description">Browse and invest in a variety of stocks from leading companies.</p>
                 
-                    <div class="stock-details">
-                        <div class="stock-price" th:text="'₹' + ${stock.price}"></div>
-                        <div th:class="${stock.changes >= 0 ? 'stock-change positive' : 'stock-change negative'}">
-                            <i th:class="${stock.changes >= 0 ? 'fas fa-arrow-up change-icon' : 'fas fa-arrow-down change-icon'}"></i>
-                            <span th:text="${stock.changes >= 0 ? '+' + stock.changes + '%' : stock.changes + '%'}"></span>
+                <form class="search-form" action="/view-stocks">
+                    <input type="text" class="search-input" name="ticker" placeholder="Search by company name..." required>
+                    <button type="submit" class="search-btn">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </form>
+                
+                <div class="stock-grid">
+                    <div th:each="stock:${stocks}" th:class="${stock.changes >= 0 ? 'stock-card positive' : 'stock-card negative'}">
+                        <h3 class="stock-ticker" th:text="${stock.ticker}"></h3>
+                        <p class="stock-company" th:text="${stock.companyName}"></p>
+                        
+                        <div class="stock-details">
+                            <div class="stock-price" th:text="'₹' + ${stock.price}"></div>
+                            <div th:class="${stock.changes >= 0 ? 'stock-change positive' : 'stock-change negative'}">
+                                <i th:class="${stock.changes >= 0 ? 'fas fa-arrow-up change-icon' : 'fas fa-arrow-down change-icon'}"></i>
+                                <span th:text="${stock.changes >= 0 ? '+' + stock.changes + '%' : stock.changes + '%'}"></span>
+                            </div>
+                        </div>
+                        
+                        <div class="stock-volume">Available: <span th:text="${stock.quantity}"></span> shares</div>
+                        
+                        <div class="stock-actions">
+                            <a th:href="'/buy-stock/'+${stock.ticker}" class="btn btn-success">
+                                <i class="fas fa-shopping-cart"></i> Buy
+                            </a>
+                        </div>
+                        
+                        <div th:class="${stock.changes >= 0 ? 'graph-indicator positive' : 'graph-indicator negative'}">
+                            <i th:class="${stock.changes >= 0 ? 'fas fa-chart-line fa-3x' : 'fas fa-chart-line fa-3x fa-flip-vertical'}"></i>
                         </div>
                     </div>
-                    
-                    <div class="stock-volume">Volume: <span th:text="${stock.quantity}"></span> shares</div>
-                    
-                    <div class="stock-actions">
-                        <a th:href="'/buy-stock/'+${stock.ticker}" class="btn btn-success">
-                           Buy
-                        </a>
-                    </div>
-                    
-                    <div th:class="${stock.changes >= 0 ? 'graph-indicator positive' : 'graph-indicator negative'}">
-                        <i th:class="${stock.changes >= 0 ? 'fas fa-chart-line fa-3x' : 'fas fa-chart-line fa-3x fa-flip-vertical'}"></i>
-                    </div>
                 </div>
+                
+                <a href="/" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
             </div>
-            
-            <a href="/" class="btn btn-secondary">Back to Dashboard</a>
         </div>
     </div>
     
     <footer>
-        <div class="container">
-            <p>&copy; 2023 StockMarket. All rights reserved.</p>
+        <div class="container">            
+            <div class="footer-bottom">
+                <p>&copy; 2025 StockMarket. All rights reserved.</p>
+            </div>
         </div>
     </footer>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+        
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const navLinks = document.getElementById('nav-links');
+        
+        mobileMenuBtn.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+            
+            // Change icon based on menu state
+            const icon = mobileMenuBtn.querySelector('i');
+            if (navLinks.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+        
+        // Auto-hide notifications after 5 seconds
+        const notificationContainer = document.querySelector('.notification-container');
+        if (notificationContainer) {
+            setTimeout(() => {
+                const notification = notificationContainer.querySelector('.notification');
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                    notificationContainer.style.display = 'none';
+                }, 500);
+            }, 2000);
+        }
+        
+        // Auto-focus search input
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.querySelector('.search-input');
+            if (searchInput) {
+                searchInput.focus();
+            }
+        });
+    </script>
 </body>
 </html>
+

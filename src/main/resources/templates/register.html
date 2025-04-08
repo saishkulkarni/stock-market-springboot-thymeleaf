@@ -3,139 +3,286 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="StockMarket - Create your account to start investing">
     <title>StockMarket - Register</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
         :root {
             --primary-color: #2e7d32;
+            --primary-dark: #005005;
             --secondary-color: #1565c0;
+            --secondary-dark: #003c8f;
             --accent-color: #f57c00;
+            --accent-dark: #bb4d00;
             --danger-color: #c62828;
+            --success-color: #2e7d32;
             --light-color: #f5f5f5;
             --dark-color: #212121;
+            --gray-100: #f8f9fa;
+            --gray-300: #dee2e6;
+            --gray-600: #6c757d;
+            --gray-700: #495057;
+            --gray-800: #343a40;
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
             --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
         }
         
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        html, body {
+            height: 100%;
         }
         
         body {
-            background-color: #f9f9f9;
-            color: var(--dark-color);
+            background-color: var(--gray-100);
+            color: var(--gray-800);
             line-height: 1.6;
+            display: flex;
+            flex-direction: column;
         }
         
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 0 20px;
         }
         
-        header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 20px 0;
+        /* Navbar Styles */
+        .navbar {
+            background-color: white;
             box-shadow: var(--shadow);
-            margin-bottom: 30px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 15px 0;
+            transition: var(--transition);
         }
         
-        .header-content {
+        .navbar.scrolled {
+            padding: 10px 0;
+        }
+        
+        .navbar-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
         
         .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--dark-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            color: var(--primary-color);
+            margin-right: 10px;
             font-size: 28px;
-            font-weight: bold;
         }
         
         .logo span {
             color: var(--accent-color);
         }
         
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-link {
+            color: var(--gray-700);
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 8px 12px;
+            border-radius: 4px;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary-color);
+            background-color: var(--gray-100);
+        }
+        
+        .nav-link.active {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--gray-700);
+            cursor: pointer;
+        }
+        
+        /* Notification Styles */
+        .notification-container {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            pointer-events: none;
+        }
+        
         .notification {
             background-color: white;
             border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 25px;
+            padding: 15px 20px;
             box-shadow: var(--shadow);
+            position: relative;
+            border-left: 4px solid var(--primary-color);
+            max-width: 600px;
+            width: 90%;
+            pointer-events: auto;
+            transition: opacity 0.5s ease, transform 0.5s ease;
         }
         
         .success-message {
-            color: var(--primary-color);
+            color: var(--success-color);
             font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+        
+        .success-message::before {
+            content: '\f058';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            margin-right: 10px;
+            font-size: 18px;
         }
         
         .error-message {
             color: var(--danger-color);
             font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+        
+        .error-message::before {
+            content: '\f057';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        /* Main Content */
+        .main-content-wrapper {
+            flex: 1 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 0;
         }
         
         .main-content {
             background-color: white;
-            border-radius: 8px;
+            border-radius: 12px;
             padding: 30px;
             box-shadow: var(--shadow);
-            min-height: 400px;
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto;
         }
         
-        .form-title {
-            text-align: center;
-            margin-bottom: 30px;
-            color: var(--secondary-color);
+        .register-title {
             font-size: 28px;
+            margin-bottom: 15px;
+            color: var(--secondary-color);
+            text-align: center;
+        }
+        
+        .register-description {
+            font-size: 16px;
+            color: var(--gray-600);
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        /* Form Styles */
+        .register-form {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
         }
         
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 0;
         }
         
         .form-label {
             display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #444;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: var(--gray-700);
         }
         
         .form-control {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
-            transition: border-color 0.3s;
+            padding: 10px 15px;
+            border: 1px solid var(--gray-300);
+            border-radius: 6px;
+            font-size: 15px;
+            transition: var(--transition);
         }
         
         .form-control:focus {
-            border-color: var(--secondary-color);
             outline: none;
+            border-color: var(--secondary-color);
             box-shadow: 0 0 0 2px rgba(21, 101, 192, 0.2);
         }
         
         .error-text {
             display: block;
             color: var(--danger-color);
-            font-size: 14px;
-            margin-top: 5px;
+            font-size: 13px;
+            margin-top: 4px;
         }
         
+        /* Button Styles */
         .btn {
             padding: 12px 24px;
             border: none;
             border-radius: 6px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: var(--shadow);
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
             font-size: 16px;
             min-width: 150px;
             text-align: center;
             text-decoration: none;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+        }
+        
+        .btn i {
+            font-size: 18px;
         }
         
         .btn-primary {
@@ -144,109 +291,242 @@
         }
         
         .btn-primary:hover {
-            background-color: #1b5e20;
+            background-color: var(--primary-dark);
             transform: translateY(-2px);
+            box-shadow: var(--shadow);
         }
         
         .form-actions {
-            margin-top: 30px;
-            text-align: center;
+            margin-top: 20px;
+            grid-column: span 2;
         }
         
-        .back-link {
+        .login-link {
             display: block;
             text-align: center;
             margin-top: 20px;
             color: var(--secondary-color);
             text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
         }
         
-        .back-link:hover {
+        .login-link:hover {
+            color: var(--secondary-dark);
             text-decoration: underline;
         }
         
-        footer {
+        .back-link {
+            display: block;
             text-align: center;
-            margin-top: 40px;
-            padding: 20px;
-            color: #666;
+            margin-top: 10px;
+            color: var(--gray-600);
+            text-decoration: none;
             font-size: 14px;
+            transition: var(--transition);
         }
         
+        .back-link:hover {
+            color: var(--gray-800);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--gray-800);
+            color: var(--gray-300);
+            padding: 20px 0;
+            flex-shrink: 0;
+            text-align: center;
+        }
+        
+        .footer-bottom {
+            padding-top: 5px;
+        }
+        
+        /* Responsive Styles */
         @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background-color: white;
+                flex-direction: column;
+                padding: 20px;
+                box-shadow: var(--shadow);
+                z-index: 1000;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .register-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-actions {
+                grid-column: span 1;
+            }
+            
+            .main-content {
+                padding: 25px;
+            }
+        }
+        
+        @media (max-width: 576px) {
             .main-content {
                 padding: 20px;
+            }
+            
+            .main-content-wrapper {
+                padding: 20px 0;
+            }
+            
+            .register-title {
+                font-size: 24px;
             }
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="container header-content">
-            <div class="logo">Stock<span>Market</span></div>
-        </div>
-    </header>
-    
-    <div class="container">
-        <div class="notification" th:if="${session.pass != null || session.fail != null}">
+    <div class="notification-container" th:if="${session.pass != null || session.fail != null}">
+        <div class="notification">
             <h3 class="success-message" th:if="${session.pass != null}" th:text="${session.pass}"></h3>
             <h3 class="error-message" th:if="${session.fail != null}" th:text="${session.fail}"></h3>
             <span th:text="${@stockServiceImpl.removeMessage()}"></span>
         </div>
-        
-        <div class="main-content">
-            <h2 class="form-title">Create Your Account</h2>
+    </div>
+
+    <nav class="navbar" id="navbar">
+        <div class="container navbar-container">
+            <a href="/" class="logo">
+                <i class="fas fa-chart-line"></i>
+                Stock<span>Market</span>
+            </a>
             
-            <form action="/register" method="post" th:object="${user}">
-                <div class="form-group">
-                    <label class="form-label" for="name">Full Name</label>
-                    <input type="text" id="name" class="form-control" th:field="*{name}" placeholder="Enter your full name">
-                    <span class="error-text" th:errors="*{name}"></span>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label" for="email">Email Address</label>
-                    <input type="email" id="email" class="form-control" th:field="*{email}" placeholder="Enter your email address">
-                    <span class="error-text" th:errors="*{email}"></span>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label" for="mobile">Mobile Number</label>
-                    <input type="number" id="mobile" class="form-control" th:field="*{mobile}" placeholder="Enter your mobile number">
-                    <span class="error-text" th:errors="*{mobile}"></span>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label" for="dob">Date of Birth</label>
-                    <input type="date" id="dob" class="form-control" th:field="*{dob}">
-                    <span class="error-text" th:errors="*{dob}"></span>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label" for="password">Password</label>
-                    <input type="password" id="password" class="form-control" th:field="*{password}" placeholder="Create a strong password">
-                    <span class="error-text" th:errors="*{password}"></span>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label" for="confirmPassword">Confirm Password</label>
-                    <input type="password" id="confirmPassword" class="form-control" th:field="*{confirmPassword}" placeholder="Confirm your password">
-                    <span class="error-text" th:errors="*{confirmPassword}"></span>
-                </div>
-                
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">Register</button>
-                </div>
-            </form>
+            <button class="mobile-menu-btn" id="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
             
-            <a href="/" class="back-link">Back to Home</a>
+            <div class="nav-links" id="nav-links">
+                <a href="/login" class="nav-link">Login</a>
+                <a href="/register" class="nav-link active">Register</a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="main-content-wrapper">
+        <div class="container">
+            <div class="main-content">
+                <h2 class="register-title">Create Your Account</h2>
+                <p class="register-description">Join StockMarket today and start your investment journey.</p>
+                
+                <form class="register-form" action="/register" method="post" th:object="${user}">
+                    <div class="form-group">
+                        <label class="form-label" for="name">Full Name</label>
+                        <input type="text" id="name" class="form-control" th:field="*{name}" placeholder="Enter your full name">
+                        <span class="error-text" th:errors="*{name}"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email Address</label>
+                        <input type="email" id="email" class="form-control" th:field="*{email}" placeholder="Enter your email address">
+                        <span class="error-text" th:errors="*{email}"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="mobile">Mobile Number</label>
+                        <input type="number" id="mobile" class="form-control" th:field="*{mobile}" placeholder="Enter your mobile number">
+                        <span class="error-text" th:errors="*{mobile}"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="dob">Date of Birth</label>
+                        <input type="date" id="dob" class="form-control" th:field="*{dob}">
+                        <span class="error-text" th:errors="*{dob}"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="password">Password</label>
+                        <input type="password" id="password" class="form-control" th:field="*{password}" placeholder="Create a strong password">
+                        <span class="error-text" th:errors="*{password}"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword" class="form-control" th:field="*{confirmPassword}" placeholder="Confirm your password">
+                        <span class="error-text" th:errors="*{confirmPassword}"></span>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-user-plus"></i> Register
+                        </button>
+                    </div>
+                </form>
+                
+                <a href="/login" class="login-link">Already have an account? Login here</a>
+                <a href="/" class="back-link">Back to Home</a>
+            </div>
         </div>
     </div>
     
     <footer>
-        <div class="container">
-            <p>&copy; 2023 StockMarket. All rights reserved.</p>
+        <div class="container">            
+            <div class="footer-bottom">
+                <p>&copy; 2025 StockMarket. All rights reserved.</p>
+            </div>
         </div>
     </footer>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+        
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const navLinks = document.getElementById('nav-links');
+        
+        mobileMenuBtn.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+            
+            // Change icon based on menu state
+            const icon = mobileMenuBtn.querySelector('i');
+            if (navLinks.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+        
+        // Auto-hide notifications after 5 seconds
+        const notificationContainer = document.querySelector('.notification-container');
+        if (notificationContainer) {
+            setTimeout(() => {
+                const notification = notificationContainer.querySelector('.notification');
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                    notificationContainer.style.display = 'none';
+                }, 500);
+            }, 2000);
+        }
+    </script>
 </body>
 </html>
