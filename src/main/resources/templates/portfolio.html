@@ -31,9 +31,9 @@
                 <td th:text="${transaction.stock_ticker}"></td>
                 <td th:text="${@stockRepository.findById(transaction.stock_ticker).get().getCompanyName()}"></td>
                 <th th:text="${transaction.quantity}"></th>
-                <th th:text="${transaction.price/transaction.quantity}"></th>
+                <th th:text="${transaction.price}"></th>
                 <th th:text="${@stockRepository.findById(transaction.stock_ticker).get().getPrice()}"></th>
-                <th th:text="${@stockRepository.findById(transaction.stock_ticker).get().getPrice()-transaction.price/transaction.quantity}"></th>
+                <th th:text="${@stockRepository.findById(transaction.stock_ticker).get().getPrice()-transaction.price}"></th>
                 <th><a th:href="'/sell/'+${transaction.stock_ticker}"><button>Sell</button></a></th>
             </tr>
         </table>

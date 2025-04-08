@@ -251,7 +251,7 @@ public class StockServiceImpl implements StockService {
 
 			Map<String, Object> name = restTemplate.getForObject(nameFetchEndpoint, Map.class);
 			List<Map<String, String>> bestMatches = (List<Map<String, String>>) name.get("bestMatches");
-			if (!bestMatches.isEmpty()) {
+			if (bestMatches != null && !bestMatches.isEmpty()) {
 				stock.setCompanyName(bestMatches.get(0).get("2. name"));
 			}
 			return true;
@@ -369,7 +369,7 @@ public class StockServiceImpl implements StockService {
 
 			if (updateStockFromAPI(stock.get()))
 				stockRepository.save(stock.get());
-			
+
 			model.addAttribute("stock", stock.get());
 			return "view-stock.html";
 		} else {
@@ -443,7 +443,7 @@ public class StockServiceImpl implements StockService {
 			if (flag) {
 				UserStocksTransaction transaction = new UserStocksTransaction();
 				transaction.setStock_ticker(ticker);
-				transaction.setPrice(price);
+				transaction.setPrice(price / quantity);
 				transaction.setQuantity(quantity);
 				transactions.add(transaction);
 
@@ -483,7 +483,7 @@ public class StockServiceImpl implements StockService {
 				session.setAttribute("fail", "No Data to display in Portfolio");
 				return "redirect:/";
 			} else {
-				double totalInvested = transactions.stream().mapToDouble(UserStocksTransaction::getPrice).sum();
+				double totalInvested = transactions.stream().mapToDouble(x -> x.getPrice() * x.getQuantity()).sum();
 				double currentValue = 0;
 				for (UserStocksTransaction transaction : transactions) {
 					Stock stock = stockRepository.findById(transaction.getStock_ticker()).get();
@@ -529,14 +529,13 @@ public class StockServiceImpl implements StockService {
 					} else {
 						if (transaction.getQuantity() > quantity) {
 							transaction.setQuantity(transaction.getQuantity() - quantity);
-							transaction.setPrice(transaction.getPrice()
-									- (quantity * (transaction.getPrice() / transaction.getQuantity())));
 							transactionRepository.save(transaction);
-							user.setAmount(user.getAmount() + (stock.getPrice() * quantity));
+							user.setAmount(user.getAmount()
+									+ (stock.getPrice() - (stock.getPrice() * platformPercentage) * quantity));
 							userRepository.save(user);
 						} else {
 							transactions.remove(transaction);
-							user.setAmount(user.getAmount() + (stock.getPrice() * quantity));
+							user.setAmount(user.getAmount() + (stock.getPrice()* platformPercentage * quantity));
 							userRepository.save(user);
 							transactionRepository.deleteById(transaction.getId());
 						}
@@ -545,6 +544,13 @@ public class StockServiceImpl implements StockService {
 						stockRepository.save(stock);
 						session.setAttribute("user", user);
 						session.setAttribute("pass", "Stock Sold Success");
+
+						AdminData data = dataRepository.findById(1).get();
+						data.setTotalPlatformFee(
+								data.getTotalPlatformFee() + (stock.getPrice() * platformPercentage) * quantity);
+						data.setTotalStocksSold(data.getTotalStocksSold()+quantity);
+						data.setTotalTransaction(data.getTotalTransaction() + stock.getPrice() * quantity);
+						dataRepository.save(data);
 						return "redirect:/portfolio";
 					}
 				}
