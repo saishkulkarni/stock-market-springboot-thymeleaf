@@ -532,22 +532,23 @@ public class StockServiceImpl implements StockService {
 							transactionRepository.save(transaction);
 							user.setAmount(user.getAmount()
 									+ (stock.getPrice() - (stock.getPrice() * platformPercentage) * quantity));
+							userRepository.save(user);
 						} else {
 							transactions.remove(transaction);
-							user.setAmount(user.getAmount() + (stock.getPrice()* platformPercentage * quantity));
+							user.setAmount(user.getAmount() + (stock.getPrice() * platformPercentage * quantity));
 							userRepository.save(user);
 							transactionRepository.deleteById(transaction.getId());
 						}
 
 						stock.setQuantity(stock.getQuantity() + quantity);
 						stockRepository.save(stock);
-						session.setAttribute("user", userRepository.save(user));
+						session.setAttribute("user", userRepository.findById(user.getId()).get());
 						session.setAttribute("pass", "Stock Sold Success");
 
 						AdminData data = dataRepository.findById(1).get();
 						data.setTotalPlatformFee(
 								data.getTotalPlatformFee() + (stock.getPrice() * platformPercentage) * quantity);
-						data.setTotalStocksSold(data.getTotalStocksSold()+quantity);
+						data.setTotalStocksSold(data.getTotalStocksSold() + quantity);
 						data.setTotalTransaction(data.getTotalTransaction() + stock.getPrice() * quantity);
 						dataRepository.save(data);
 						return "redirect:/portfolio";
