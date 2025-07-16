@@ -5,9 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="StockMarket - Your trusted platform for stock trading and investment"
+      content="NammaStocks - Your trusted platform for stock trading and investment"
     />
-    <title>StockMarket - Home</title>
+    <title>NammaStocks - Home</title>
+
+    <!-- Favicon -->
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNCIgZmlsbD0iIzJlN2QzMiIvPgo8cGF0aCBkPSJNOCAyMkwxMiAxOEwxNiAyMEwyNCA4IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8Y2lyY2xlIGN4PSI4IiBjeT0iMjIiIHI9IjIiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjEyIiBjeT0iMTgiIHI9IjIiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjE2IiBjeT0iMjAiIHI9IjIiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjI0IiBjeT0iOCIgcj0iMiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgdmlld0JveD0iMCAwIDE4MCAxODAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxODAiIGhlaWdodD0iMTgwIiByeD0iMjAiIGZpbGw9IiMyZTdkMzIiLz4KPHBhdGggZD0iTTQ1IDEyM0w2NyAxMDFMOTAgMTEyTDEzNSA0NSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSI4IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPGNpcmNsZSBjeD0iNDUiIGN5PSIxMjMiIHI9IjEwIiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSI2NyIgY3k9IjEwMSIgcj0iMTAiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjkwIiBjeT0iMTEyIiByPSIxMCIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTM1IiBjeT0iNDUiIHI9IjEwIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4="
+    />
 
     <!-- Font Awesome -->
     <link
@@ -452,7 +463,7 @@
       <div class="container navbar-container">
         <a href="/" class="logo">
           <i class="fas fa-chart-line"></i>
-          Stock<span>Market</span>
+          Namma<span>Stocks</span>
         </a>
 
         <button class="mobile-menu-btn" id="mobile-menu-btn">
@@ -486,7 +497,7 @@
       <div class="container">
         <div class="main-content">
           <div class="welcome-text">
-            <h1>Welcome to StockMarket</h1>
+            <h1>Welcome to NammaStocks</h1>
             <p th:if="${session.user==null && session.admin==null}">
               Your trusted platform for stock trading and investment. Register
               or login to start your investment journey.
@@ -536,8 +547,6 @@
                 wallet system.
               </p>
             </div>
-
-
           </div>
 
           <div class="btn-container" th:if="${session.user!=null}">
@@ -570,7 +579,7 @@
     <footer>
       <div class="container">
         <div class="footer-bottom">
-          <p>&copy; 2025 StockMarket. All rights reserved.</p>
+          <p>&copy; 2025 NammaStocks. All rights reserved.</p>
         </div>
       </div>
     </footer>

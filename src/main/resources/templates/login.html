@@ -3,21 +3,30 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="StockMarket - Login to your account" />
-    <title>StockMarket - Login</title>
+    <meta name="description" content="NammaStocks - Login to your account" />
+    <title>NammaStocks - Login</title>
+
+    <!-- Favicon -->
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNCIgZmlsbD0iIzJlN2QzMiIvPgo8cGF0aCBkPSJNOCAyMkwxMiAxOEwxNiAyMEwyNCA4IiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8Y2lyY2xlIGN4PSI4IiBjeT0iMjIiIHI9IjIiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjEyIiBjeT0iMTgiIHI9IjIiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjE2IiBjeT0iMjAiIHI9IjIiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjI0IiBjeT0iOCIgcj0iMiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgdmlld0JveD0iMCAwIDE4MCAxODAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxODAiIGhlaWdodD0iMTgwIiByeD0iMjAiIGZpbGw9IiMyZTdkMzIiLz4KPHBhdGggZD0iTTQ1IDEyM0w2NyAxMDFMOTAgMTEyTDEzNSA0NSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSI4IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPGNpcmNsZSBjeD0iNDUiIGN5PSIxMjMiIHI9IjEwIiBmaWxsPSJ3aGl0ZSIvPgo8Y2lyY2xlIGN4PSI2NyIgY3k9IjEwMSIgcj0iMTAiIGZpbGw9IndoaXRlIi8+CjxjaXJjbGUgY3g9IjkwIiBjeT0iMTEyIiByPSIxMCIgZmlsbD0id2hpdGUiLz4KPGNpcmNsZSBjeD0iMTM1IiBjeT0iNDUiIHI9IjEwIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4="
+    />
 
     <!-- Font Awesome -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
-
     <!-- Google Fonts -->
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
-
     <style>
       :root {
         --primary-color: #2e7d32;
@@ -39,19 +48,16 @@
         --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         --transition: all 0.3s ease;
       }
-
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
         font-family: "Poppins", sans-serif;
       }
-
       html,
       body {
         height: 100%;
       }
-
       body {
         background-color: var(--gray-100);
         color: var(--gray-800);
@@ -59,13 +65,11 @@
         display: flex;
         flex-direction: column;
       }
-
       .container {
         max-width: 1200px;
         margin: 0 auto;
         padding: 0 20px;
       }
-
       /* Navbar Styles */
       .navbar {
         background-color: white;
@@ -76,17 +80,14 @@
         padding: 15px 0;
         transition: var(--transition);
       }
-
       .navbar.scrolled {
         padding: 10px 0;
       }
-
       .navbar-container {
         display: flex;
         justify-content: space-between;
         align-items: center;
       }
-
       .logo {
         font-size: 24px;
         font-weight: 700;
@@ -95,22 +96,18 @@
         display: flex;
         align-items: center;
       }
-
       .logo i {
         color: var(--primary-color);
         margin-right: 10px;
         font-size: 28px;
       }
-
       .logo span {
         color: var(--accent-color);
       }
-
       .nav-links {
         display: flex;
         gap: 20px;
       }
-
       .nav-link {
         color: var(--gray-700);
         text-decoration: none;
@@ -119,17 +116,14 @@
         padding: 8px 12px;
         border-radius: 4px;
       }
-
       .nav-link:hover {
         color: var(--primary-color);
         background-color: var(--gray-100);
       }
-
       .nav-link.active {
         color: var(--primary-color);
         font-weight: 600;
       }
-
       .mobile-menu-btn {
         display: none;
         background: none;
@@ -138,7 +132,6 @@
         color: var(--gray-700);
         cursor: pointer;
       }
-
       /* Notification Styles */
       .notification-container {
         position: fixed;
@@ -150,7 +143,6 @@
         justify-content: center;
         pointer-events: none;
       }
-
       .notification {
         background-color: white;
         border-radius: 8px;
@@ -163,14 +155,12 @@
         pointer-events: auto;
         transition: opacity 0.5s ease, transform 0.5s ease;
       }
-
       .success-message {
         color: var(--success-color);
         font-weight: 600;
         display: flex;
         align-items: center;
       }
-
       .success-message::before {
         content: "\f058";
         font-family: "Font Awesome 6 Free";
@@ -178,14 +168,12 @@
         margin-right: 10px;
         font-size: 18px;
       }
-
       .error-message {
         color: var(--danger-color);
         font-weight: 600;
         display: flex;
         align-items: center;
       }
-
       .error-message::before {
         content: "\f057";
         font-family: "Font Awesome 6 Free";
@@ -193,7 +181,6 @@
         margin-right: 10px;
         font-size: 18px;
       }
-
       /* Main Content */
       .main-content-wrapper {
         flex: 1 0 auto;
@@ -202,7 +189,6 @@
         justify-content: center;
         padding: 40px 0;
       }
-
       .main-content {
         background-color: white;
         border-radius: 12px;
@@ -212,37 +198,31 @@
         max-width: 500px;
         margin: 0 auto;
       }
-
       .login-title {
         font-size: 28px;
         margin-bottom: 15px;
         color: var(--secondary-color);
         text-align: center;
       }
-
       .login-description {
         font-size: 16px;
         color: var(--gray-600);
         margin-bottom: 30px;
         text-align: center;
       }
-
       /* Form Styles */
       .login-form {
         width: 100%;
       }
-
       .form-group {
         margin-bottom: 20px;
       }
-
       .form-label {
         display: block;
         margin-bottom: 8px;
         font-weight: 500;
         color: var(--gray-700);
       }
-
       .form-control {
         width: 100%;
         padding: 12px 15px;
@@ -251,13 +231,11 @@
         font-size: 16px;
         transition: var(--transition);
       }
-
       .form-control:focus {
         outline: none;
         border-color: var(--secondary-color);
         box-shadow: 0 0 0 2px rgba(21, 101, 192, 0.2);
       }
-
       /* Button Styles */
       .btn {
         padding: 12px 24px;
@@ -277,22 +255,18 @@
         gap: 8px;
         width: 100%;
       }
-
       .btn i {
         font-size: 18px;
       }
-
       .btn-primary {
         background-color: var(--primary-color);
         color: white;
       }
-
       .btn-primary:hover {
         background-color: var(--primary-dark);
         transform: translateY(-2px);
         box-shadow: var(--shadow);
       }
-
       .register-link {
         display: block;
         text-align: center;
@@ -302,12 +276,10 @@
         font-weight: 500;
         transition: var(--transition);
       }
-
       .register-link:hover {
         color: var(--secondary-dark);
         text-decoration: underline;
       }
-
       .back-link {
         display: block;
         text-align: center;
@@ -317,11 +289,9 @@
         font-size: 14px;
         transition: var(--transition);
       }
-
       .back-link:hover {
         color: var(--gray-800);
       }
-
       /* Footer */
       footer {
         background-color: var(--gray-800);
@@ -330,11 +300,9 @@
         flex-shrink: 0;
         text-align: center;
       }
-
       .footer-bottom {
         padding-top: 5px;
       }
-
       /* Responsive Styles */
       @media (max-width: 768px) {
         .nav-links {
@@ -349,29 +317,23 @@
           box-shadow: var(--shadow);
           z-index: 1000;
         }
-
         .nav-links.active {
           display: flex;
         }
-
         .mobile-menu-btn {
           display: block;
         }
-
         .main-content {
           padding: 30px;
         }
       }
-
       @media (max-width: 576px) {
         .main-content {
           padding: 20px;
         }
-
         .main-content-wrapper {
           padding: 20px 0;
         }
-
         .login-title {
           font-size: 24px;
         }
@@ -397,33 +359,29 @@
         <span th:text="${@stockServiceImpl.removeMessage()}"></span>
       </div>
     </div>
-
     <nav class="navbar" id="navbar">
       <div class="container navbar-container">
         <a href="/" class="logo">
           <i class="fas fa-chart-line"></i>
-          Stock<span>Market</span>
+          Namma<span>Stocks</span>
         </a>
-
         <button class="mobile-menu-btn" id="mobile-menu-btn">
           <i class="fas fa-bars"></i>
         </button>
-
         <div class="nav-links" id="nav-links">
           <a href="/login" class="nav-link active">Login</a>
           <a href="/register" class="nav-link">Register</a>
         </div>
       </div>
     </nav>
-
     <div class="main-content-wrapper">
       <div class="container">
         <div class="main-content">
           <h2 class="login-title">Welcome Back</h2>
           <p class="login-description">
-            Sign in to access your account and manage your investments.
+            Sign in to access your NammaStocks account and manage your
+            investments.
           </p>
-
           <form class="login-form" action="/login" method="post">
             <div class="form-group">
               <label class="form-label" for="email">Email Address</label>
@@ -436,7 +394,6 @@
                 required
               />
             </div>
-
             <div class="form-group">
               <label class="form-label" for="password">Password</label>
               <input
@@ -448,12 +405,10 @@
                 required
               />
             </div>
-
             <button type="submit" class="btn btn-primary">
               <i class="fas fa-sign-in-alt"></i> Login
             </button>
           </form>
-
           <a href="/register" class="register-link"
             >Don't have an account? Register now</a
           >
@@ -461,15 +416,13 @@
         </div>
       </div>
     </div>
-
     <footer>
       <div class="container">
         <div class="footer-bottom">
-          <p>&copy; 2025 StockMarket. All rights reserved.</p>
+          <p>&copy; 2025 NammaStocks. All rights reserved.</p>
         </div>
       </div>
     </footer>
-
     <!-- Custom JavaScript -->
     <script>
       // Navbar scroll effect
@@ -481,14 +434,11 @@
           navbar.classList.remove("scrolled");
         }
       });
-
       // Mobile menu toggle
       const mobileMenuBtn = document.getElementById("mobile-menu-btn");
       const navLinks = document.getElementById("nav-links");
-
       mobileMenuBtn.addEventListener("click", function () {
         navLinks.classList.toggle("active");
-
         // Change icon based on menu state
         const icon = mobileMenuBtn.querySelector("i");
         if (navLinks.classList.contains("active")) {
@@ -499,7 +449,6 @@
           icon.classList.add("fa-bars");
         }
       });
-
       // Auto-hide notifications after 5 seconds
       const notificationContainer = document.querySelector(
         ".notification-container"

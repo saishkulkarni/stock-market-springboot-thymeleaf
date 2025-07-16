@@ -186,10 +186,18 @@ public class StockServiceImpl implements StockService {
 		MimeMessage message = mailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message);
 		try {
-			helper.setFrom("saishkulkarni7@gmail.com", "StockMarketApp");
+			helper.setFrom("saishkulkarni7@gmail.com", "NammaStocks");
 			helper.setTo(user.getEmail());
 			helper.setSubject("OTP for Account Creation");
-			helper.setText("<h1>Hello " + user.getName() + " Your OTP is : " + user.getOtp() + "</h1>", true);
+			helper.setText("<div style='background-color: #f8f9fa; padding: 20px; border-radius: 10px; font-family: Arial, sans-serif;'>"
+			+ "<h1 style='color: #007bff; text-align: center; margin-bottom: 20px;'>Namma Stocks</h1>"
+			+ "<p style='font-size: 16px; color: #333;'>Hello " + user.getName() + ",</p>"
+			+ "<p style='font-size: 16px; color: #333; margin-bottom: 20px;'>Thank you for registering with us. Please use the following OTP to verify your account:</p>"
+			+ "<div style='background-color: #e9ecef; padding: 15px; border-radius: 5px; text-align: center; margin: 20px 0;'>"
+			+ "<h2 style='color: #28a745; margin: 0;'>" + user.getOtp() + "</h2>"
+			+ "</div>"
+			+ "<p style='font-size: 14px; color: #6c757d; text-align: center;'>This OTP is valid for a limited time only.</p>"
+			+ "</div>", true);
 			mailSender.send(message);
 		} catch (Exception e) {
 			System.err.println("Unable to Send Email");
@@ -535,7 +543,7 @@ public class StockServiceImpl implements StockService {
 							userRepository.save(user);
 						} else {
 							transactions.remove(transaction);
-							user.setAmount(user.getAmount() + (stock.getPrice() * platformPercentage * quantity));
+							user.setAmount(user.getAmount() + (stock.getPrice()-(stock.getPrice() * platformPercentage) * quantity));
 							userRepository.save(user);
 							transactionRepository.deleteById(transaction.getId());
 						}
